@@ -1,23 +1,32 @@
+import useImageLoading from '../hooks/useImageLoading';
+import ImageSliderSkeleton from './ImageSliderSkeleton';
+
 function ImageSlider({ imageList, setImgIndex, imgIndex }) {
+  const imagesLoaded = useImageLoading(imageList);
+  
+  if (!imagesLoaded) {
+    return <ImageSliderSkeleton />;
+  }
+  
   return (
-    <div className="flex lg:flex-row flex-col-reverse justify-around items-center">
-      <div className="flex flex-row lg:flex-col justify-around">
+    <div className="flex flex-col-reverse items-center justify-around lg:flex-row">
+      <div className="flex flex-row justify-around lg:flex-col">
         {imageList.map((image, index) => (
           <img
-            className={`lg:w-20 md:w-16 w-14 my-5 max-md:mx-2 max-lg:mx-5  rounded-xl cursor-pointer ${
+            className={`lg:w-20 md:w-16 w-14 my-5 max-md:mx-2 max-lg:mx-5 rounded-xl cursor-pointer ${
               imgIndex === index ? "opacity-30" : ""
             }`}
             key={index}
             src={image}
             onClick={() => setImgIndex(index)}
-            alt=""
+            alt={`Product thumbnail ${index + 1}`}
           />
         ))}
       </div>
       <img
-        className="lg:w-4/6 max-sm:w-full rounded-xl object-cover"
+        className="object-cover lg:w-4/6 max-sm:w-full rounded-xl"
         src={imageList[imgIndex]}
-        alt=""
+        alt="Product main image"
       />
     </div>
   );

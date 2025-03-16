@@ -11,8 +11,24 @@ const dummyJsonClient = axios.create({
   },
 });
 
-
 const categoryCache = new Map();
+let categoriesListCache = null;
+let totalProductCountCache = null;
+
+async function getCachedCategories() {
+  if (categoriesListCache) {
+    return categoriesListCache;
+  }
+  
+  try {
+    const response = await dummyJsonClient.get('/products/categories');
+    categoriesListCache = response.data;
+    return categoriesListCache;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
 
 function getCategoryId(slug, index) {
   if (!slug) return index + 1;
@@ -25,7 +41,6 @@ function getCategoryId(slug, index) {
   categoryCache.set(slug, id);
   return id;
 }
-
 
 export const convertProductFormat = async (product) => {
   const {
@@ -51,15 +66,15 @@ export const convertProductFormat = async (product) => {
     updatedAt: meta.updatedAt || new Date().toISOString()
   };
 
-
   if (typeof category === 'string') {
     try {
-      const categoriesResponse = await dummyJsonClient.get('/products/categories');
-      if (categoriesResponse.data && Array.isArray(categoriesResponse.data)) {
+      const categoriesList = await getCachedCategories();
+      
+      if (categoriesList && Array.isArray(categoriesList)) {
         let categoryIndex = -1;
         
-        for (let i = 0; i < categoriesResponse.data.length; i++) {
-          const cat = categoriesResponse.data[i];
+        for (let i = 0; i < categoriesList.length; i++) {
+          const cat = categoriesList[i];
           const catSlug = typeof cat === 'string' ? cat : (cat && cat.slug);
           
           if (catSlug === category) {
@@ -123,7 +138,6 @@ export const convertCategoryFormat = (category, index) => {
   };
 };
 
-
 String.prototype.hashCode = function() {
   let hash = 0;
   for (let i = 0; i < this.length; i++) {
@@ -133,31 +147,6 @@ String.prototype.hashCode = function() {
   }
   return Math.abs(hash);
 };
-
-
-async function logCategoryMappingsForDebugging() {
-  try {
-    const response = await dummyJsonClient.get('/products/categories');
-    console.log('==== CATEGORY MAPPING DEBUG ====');
-    console.log('Total categories:', response.data.length);
-    
-    response.data.forEach((category, index) => {
-      const id = index + 1;
-      const name = typeof category === 'string' 
-        ? category 
-        : (category && category.name) || 'Unknown';
-      const slug = typeof category === 'string'
-        ? category
-        : (category && category.slug) || 'unknown';
-      
-      console.log(`ID: ${id}, Name: ${name}, Slug: ${slug}`);
-    });
-    
-    console.log('================================');
-  } catch (error) {
-    console.error('Error logging category mappings:', error);
-  }
-}
 
 export const productService = {
   getProducts: async (params = {}) => {
@@ -185,27 +174,27 @@ export const productService = {
       
       if (categoryId) {
         try {
-          const categoriesResponse = await dummyJsonClient.get('/products/categories');
+          const categoriesList = await getCachedCategories();
           
-          if (categoriesResponse.data && Array.isArray(categoriesResponse.data)) {
+          if (categoriesList && Array.isArray(categoriesList)) {
             const categoryIndex = parseInt(categoryId, 10) - 1;
             
-            if (categoryIndex >= 0 && categoryIndex < categoriesResponse.data.length) {
-              if (typeof categoriesResponse.data[categoryIndex] === 'string') {
-                url = `/products/category/${categoriesResponse.data[categoryIndex]}`;
+            if (categoryIndex >= 0 && categoryIndex < categoriesList.length) {
+              if (typeof categoriesList[categoryIndex] === 'string') {
+                url = `/products/category/${categoriesList[categoryIndex]}`;
               } 
-              else if (categoriesResponse.data[categoryIndex] && 
-                       typeof categoriesResponse.data[categoryIndex] === 'object' &&
-                       categoriesResponse.data[categoryIndex].slug) {
-                url = `/products/category/${categoriesResponse.data[categoryIndex].slug}`;
+              else if (categoriesList[categoryIndex] && 
+                       typeof categoriesList[categoryIndex] === 'object' &&
+                       categoriesList[categoryIndex].slug) {
+                url = `/products/category/${categoriesList[categoryIndex].slug}`;
               }
               console.log(`Fetching products for category: ${url}`);
             } else {
-              console.warn(`Category ID ${categoryId} out of range (total: ${categoriesResponse.data.length})`);
+              console.warn(`Category ID ${categoryId} out of range (total: ${categoriesList.length})`);
             }
           }
         } catch (categoryError) {
-          console.error('Error fetching categories for filtering:', categoryError);
+          console.error('Error using cached categories for filtering:', categoryError);
         }
       }
       
@@ -243,7 +232,6 @@ export const productService = {
     }
   },
 
-
   getProduct: async (id) => {
     try {
       const response = await dummyJsonClient.get(`/products/${id}`);
@@ -254,30 +242,30 @@ export const productService = {
     }
   },
 
-
   getCategories: async () => {
     try {
-      const response = await dummyJsonClient.get('/products/categories');
-      
-      return response.data.map(convertCategoryFormat);
+      const categoriesList = await getCachedCategories();
+      return categoriesList.map(convertCategoryFormat);
     } catch (error) {
-      console.error('Error fetching categories from DummyJSON:', error);
+      console.error('Error using cached categories:', error);
       throw new Error('Failed to fetch categories');
     }
   },
 
-
   getTotalProductCount: async () => {
     try {
+      if (totalProductCountCache !== null) {
+        return totalProductCountCache;
+      }
+      
       const response = await dummyJsonClient.get('/products?limit=1');
-      return response.data.total || 100;
+      totalProductCountCache = response.data.total || 100;
+      return totalProductCountCache;
     } catch (error) {
       console.error('Error fetching product count from DummyJSON:', error);
       return 100;
     }
   }
 };
-
-logCategoryMappingsForDebugging();
 
 export default productService; 

@@ -13,6 +13,7 @@ import ImageSlider from "../components/ImageSlider";
 import { useProduct } from "../hooks/useProductsApi";
 import { toggleFavorite, selectIsFavorite } from "../store/slices/favoritesSlice";
 import StatusWrapper from "../components/ui/StatusWrapper";
+import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 
 const LoadingSpinner = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -76,170 +77,154 @@ export default function DetailPage() {
     dispatch(toggleFavorite(product));
   };
 
-  
   const rating = product ? (product.rating || Math.floor(Math.random() * 3) + 3) : 0;
   const reviews = product ? Math.floor(Math.random() * 500) + 50 : 0;
 
   return (
     <div className="px-4 py-8 mx-auto max-w-7xl wrapper">
-      <StatusWrapper
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-        loadingText="Loading product details..."
-        errorText="Error loading product details. Please try again."
-      >
-        {product && (
-          <Suspense fallback={<LoadingSpinner />}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative overflow-hidden bg-white shadow-lg dark:bg-grayshade-400 rounded-xl"
-            >
-              {/* Navigation and Action Bar - Fixed position on mobile, absolute on desktop */}
-              <div className="sticky top-0 z-20 flex items-center justify-between w-full p-4 bg-white/95 dark:bg-grayshade-400/95 backdrop-blur-sm md:absolute md:w-auto md:right-4 md:top-4 md:bg-transparent md:p-0 md:dark:bg-transparent">
-                <Link
-                  to="/products"
-                  className="flex items-center px-3 py-2 space-x-1 text-sm text-gray-700 transition-colors bg-white rounded-full shadow-sm md:px-4 md:py-2 md:text-base dark:bg-grayshade-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-grayshade-400"
-                >
-                  <IoIosArrowBack className="flex-shrink-0" />
-                  <span>Back</span>
-                </Link>
-                
-                <button
-                  onClick={() => handleToggleFavorite(product)}
-                  className="flex items-center px-3 py-2 space-x-1 text-sm transition-colors bg-white rounded-full shadow-sm md:px-4 md:py-2 md:text-base dark:bg-grayshade-500 hover:bg-gray-50 dark:hover:bg-grayshade-400 group"
-                  aria-label={isProductFavorite ? "Remove from favorites" : "Add to favorites"}
-                >
-                  {isProductFavorite ? (
-                    <>
-                      <FaHeart className="flex-shrink-0 w-5 h-5 text-red-500" />
-                      <span className="hidden text-gray-700 dark:text-gray-200 sm:inline">Saved</span>
-                    </>
-                  ) : (
-                    <>
-                      <FaRegHeart className="flex-shrink-0 w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-red-500" />
-                      <span className="hidden text-gray-700 dark:text-gray-200 sm:inline">Save</span>
-                    </>
-                  )}
-                </button>
+      {isLoading ? (
+        <ProductDetailSkeleton />
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
+          <p className="text-lg text-red-500 dark:text-red-400">
+            Error loading product details. Please try again.
+          </p>
+          <button 
+            onClick={refetch}
+            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      ) : product ? (
+        <Suspense fallback={<LoadingSpinner />}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative overflow-hidden bg-white shadow-lg dark:bg-grayshade-400 rounded-xl"
+          >
+            {/* Navigation and Action Bar - Fixed position on mobile, absolute on desktop */}
+            <div className="sticky top-0 z-20 flex items-center justify-between w-full p-4 bg-white/95 dark:bg-grayshade-400/95 backdrop-blur-sm md:absolute md:w-auto md:right-4 md:top-4 md:bg-transparent md:p-0 md:dark:bg-transparent">
+              <Link
+                to="/products"
+                className="flex items-center px-3 py-2 space-x-1 text-sm text-gray-700 transition-colors bg-white rounded-full shadow-sm md:px-4 md:py-2 md:text-base dark:bg-grayshade-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-grayshade-400"
+              >
+                <IoIosArrowBack className="flex-shrink-0" />
+                <span>Back</span>
+              </Link>
+              
+              <button
+                onClick={() => handleToggleFavorite(product)}
+                className="flex items-center px-3 py-2 space-x-1 text-sm transition-colors bg-white rounded-full shadow-sm md:px-4 md:py-2 md:text-base dark:bg-grayshade-500 hover:bg-gray-50 dark:hover:bg-grayshade-400 group"
+                aria-label={isProductFavorite ? "Remove from favorites" : "Add to favorites"}
+              >
+                {isProductFavorite ? (
+                  <>
+                    <FaHeart className="flex-shrink-0 w-5 h-5 text-red-500" />
+                    <span className="hidden text-gray-700 dark:text-gray-200 sm:inline">Saved</span>
+                  </>
+                ) : (
+                  <>
+                    <FaRegHeart className="flex-shrink-0 w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-red-500" />
+                    <span className="hidden text-gray-700 dark:text-gray-200 sm:inline">Save</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 p-4 pt-16 md:pt-6 lg:grid-cols-2 lg:p-8">
+              <div className="relative">
+                <ImageSlider
+                  imageList={product.images}
+                  setImgIndex={setImgIndex}
+                  imgIndex={imgIndex}
+                />
               </div>
 
-              <div className="grid grid-cols-1 gap-8 p-4 pt-16 md:pt-6 lg:grid-cols-2 lg:p-8">
-                <div className="relative">
-                  <ImageSlider
-                    imageList={product.images}
-                    setImgIndex={setImgIndex}
-                    imgIndex={imgIndex}
-                  />
-                </div>
-
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="flex flex-wrap items-center gap-2 mb-3"
-                    >
-                      <span className="inline-block px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-grayshade-500 dark:text-gray-300">
-                        {product.category.name}
-                      </span>
-                      
-                      <div className="flex items-center space-x-2">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, index) => (
-                            <FaStar
-                              key={index}
-                              className={`${
-                                index < rating
-                                  ? "text-yellow-400"
-                                  : "text-gray-300 dark:text-gray-600"
-                              } w-4 h-4`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-gray-600 dark:text-gray-400">
-                          ({reviews} reviews)
-                        </span>
-                      </div>
-                    </motion.div>
-                    
-                    <motion.h1
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl dark:text-white"
-                    >
-                      {product.title}
-                    </motion.h1>
-
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                      className="mb-8 text-base text-gray-600 sm:text-lg dark:text-gray-300"
-                    >
-                      {product.description}
-                    </motion.p>
-                  </div>
-
+              <div className="flex flex-col justify-between">
+                <div>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="space-y-6"
+                    transition={{ delay: 0.2 }}
+                    className="flex flex-wrap items-center gap-2 mb-3"
                   >
-                    <div className="flex flex-wrap items-end justify-between gap-4">
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400">Price</p>
-                        <p className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
-                          ${product.price.toLocaleString()}
-                        </p>
+                    <span className="inline-block px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-grayshade-500 dark:text-gray-300">
+                      {product.category.name}
+                    </span>
+                    
+                    <div className="flex items-center space-x-2">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, index) => (
+                          <FaStar
+                            key={index}
+                            className={`${
+                              index < rating
+                                ? "text-yellow-400"
+                                : "text-gray-300 dark:text-gray-600"
+                            } w-4 h-4`}
+                          />
+                        ))}
                       </div>
-                      
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center border border-gray-300 rounded-lg dark:border-gray-600">
-                          <button
-                            onClick={() => setSelectedQuantity(Math.max(1, selectedQuantity - 1))}
-                            className="px-3 py-1 text-gray-600 rounded-l-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-grayshade-500"
-                          >
-                            -
-                          </button>
-                          <span className="px-4 py-1 text-gray-700 border-gray-300 dark:text-gray-300 border-x dark:border-gray-600">
-                            {selectedQuantity}
-                          </span>
-                          <button
-                            onClick={() => setSelectedQuantity(selectedQuantity + 1)}
-                            className="px-3 py-1 text-gray-600 rounded-r-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-grayshade-500"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="w-full">
-                      <AddToCart
-                        cartData={{
-                          id: product.id,
-                          title: product.title,
-                          price: product.price,
-                          quantity: selectedQuantity,
-                        }}
-                      />
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        ({reviews} reviews)
+                      </span>
                     </div>
                   </motion.div>
-                </div>
-              </div>
+                  
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl dark:text-white"
+                  >
+                    {product.title}
+                  </motion.h1>
 
-              <DeliveryInfo />
-            </motion.div>
-          </Suspense>
-        )}
-      </StatusWrapper>
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="mb-8 text-base text-gray-600 sm:text-lg dark:text-gray-300"
+                  >
+                    {product.description}
+                  </motion.p>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex items-end justify-around px-4"
+                >
+                  <div className="flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                      <p className="text-gray-500 dark:text-gray-400">Price</p>
+                      <p className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
+                        ${product.price.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="w-full">
+                    <AddToCart
+                      cartData={{
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        quantity: selectedQuantity,
+                      }}
+                    />
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            <DeliveryInfo />
+          </motion.div>
+        </Suspense>
+      ) : null}
     </div>
   );
 }

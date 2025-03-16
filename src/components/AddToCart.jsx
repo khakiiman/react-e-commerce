@@ -59,12 +59,12 @@ function AddToCart({cartData}) {
   
   if (isInCart) {
     return (
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-end">
         <div className="flex items-center space-x-2">
           <motion.button 
             whileTap={{ scale: 0.9 }}
             onClick={handleIncrease}
-            className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-700 text-white"
+            className="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded-md"
           >
             <FaPlus className="text-sm" />
           </motion.button>
@@ -77,7 +77,7 @@ function AddToCart({cartData}) {
             <motion.button 
               whileTap={{ scale: 0.9 }}
               onClick={handleDecrease}
-              className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-700 text-white"
+              className="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded-md"
             >
               <FaMinus className="text-sm" />
             </motion.button>
@@ -85,7 +85,7 @@ function AddToCart({cartData}) {
             <motion.button 
               whileTap={{ scale: 0.9 }}
               onClick={handleRemove}
-              className="w-8 h-8 flex items-center justify-center rounded-md bg-red-500 text-white"
+              className="flex items-center justify-center w-8 h-8 text-white bg-red-500 rounded-md"
             >
               <FaTrash className="text-sm" />
             </motion.button>
@@ -96,7 +96,7 @@ function AddToCart({cartData}) {
   }
   
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-end">
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
