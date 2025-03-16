@@ -1,96 +1,108 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaSortAmountDown, FaSortAmountUp, FaHome, FaGithub } from 'react-icons/fa';
-import { MdFilterList, MdFilterListOff } from 'react-icons/md';
-import { motion } from 'framer-motion';
-import ThemeSwitcher from './theme/ThemeSwitcher';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  FaSortAmountDown,
+  FaSortAmountUp,
+  FaHome,
+  FaGithub,
+} from "react-icons/fa";
+import { MdFilterList, MdFilterListOff } from "react-icons/md";
+import { motion } from "framer-motion";
+import ThemeSwitcher from "./theme/ThemeSwitcher";
 
-const ProductsHeader = ({ 
-  title = "Products", 
-  totalProducts = 0, 
-  onSortChange, 
+const ProductsHeader = ({
+  title = "Products",
+  totalProducts = 0,
+  onSortChange,
   activeFilters = {},
-  onClearFilters
+  onClearFilters,
 }) => {
-  const [sortOption, setSortOption] = useState('default');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortOption, setSortOption] = useState("default");
+  const [sortDirection, setSortDirection] = useState("asc");
   const [hasActiveFilters, setHasActiveFilters] = useState(false);
   const location = useLocation();
-  const isProductsPage = location.pathname === '/products';
-  
+  const isProductsPage = location.pathname === "/products";
+
   useEffect(() => {
     if (!isProductsPage) return;
-    
-    const filterCount = Object.keys(activeFilters).filter(key => {
-      if (key === 'category' && activeFilters[key] !== '0' && activeFilters[key]) return true;
-      if (key === 'search' && activeFilters[key]) return true;
-      if (key === 'minPrice' && activeFilters[key]) return true;
-      if (key === 'maxPrice' && activeFilters[key]) return true;
-      if (key === 'minRating' && activeFilters[key] > 0) return true;
+
+    const filterCount = Object.keys(activeFilters).filter((key) => {
+      if (
+        key === "category" &&
+        activeFilters[key] !== "0" &&
+        activeFilters[key]
+      )
+        return true;
+      if (key === "search" && activeFilters[key]) return true;
+      if (key === "minPrice" && activeFilters[key]) return true;
+      if (key === "maxPrice" && activeFilters[key]) return true;
+      if (key === "minRating" && activeFilters[key] > 0) return true;
       return false;
     }).length;
-    
+
     setHasActiveFilters(filterCount > 0);
   }, [activeFilters, isProductsPage]);
-  
+
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
     if (onSortChange) {
       onSortChange({ option: e.target.value, direction: sortDirection });
     }
   };
-  
+
   const toggleSortDirection = () => {
-    const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    const newDirection = sortDirection === "asc" ? "desc" : "asc";
     setSortDirection(newDirection);
-    if (onSortChange && sortOption !== 'default') {
+    if (onSortChange && sortOption !== "default") {
       onSortChange({ option: sortOption, direction: newDirection });
     }
   };
-  
+
   const getFilterBadges = () => {
     const badges = [];
-    
-    if (activeFilters.category && activeFilters.category !== '0') {
-      badges.push({ 
-        key: 'category', 
-        label: `Category: ${activeFilters.categoryName || activeFilters.category}` 
+
+    if (activeFilters.category && activeFilters.category !== "0") {
+      badges.push({
+        key: "category",
+        label: `Category: ${
+          activeFilters.categoryName || activeFilters.category
+        }`,
       });
     }
-    
+
     if (activeFilters.search) {
-      badges.push({ 
-        key: 'search', 
-        label: `Search: ${activeFilters.search}` 
+      badges.push({
+        key: "search",
+        label: `Search: ${activeFilters.search}`,
       });
     }
-    
+
     if (activeFilters.minPrice) {
-      badges.push({ 
-        key: 'minPrice', 
-        label: `Min Price: $${activeFilters.minPrice}` 
+      badges.push({
+        key: "minPrice",
+        label: `Min Price: $${activeFilters.minPrice}`,
       });
     }
-    
+
     if (activeFilters.maxPrice) {
-      badges.push({ 
-        key: 'maxPrice', 
-        label: `Max Price: $${activeFilters.maxPrice}` 
+      badges.push({
+        key: "maxPrice",
+        label: `Max Price: $${activeFilters.maxPrice}`,
       });
     }
-    
+
     if (activeFilters.minRating && activeFilters.minRating > 0) {
-      badges.push({ 
-        key: 'minRating', 
-        label: `Min Rating: ${activeFilters.minRating}★` 
+      badges.push({
+        key: "minRating",
+        label: `Min Rating: ${activeFilters.minRating}★`,
       });
     }
-    
+
     return badges;
   };
-  
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -101,15 +113,15 @@ const ProductsHeader = ({
           <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900"></div>
           <div className="absolute inset-0 bg-grid-pattern"></div>
         </div>
-        
+
         <div className="relative z-20 px-6 py-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
-                <svg 
+                <svg
                   className="w-10 h-10 mr-3"
                   viewBox="0 0 24 24"
-                  fill="none" 
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -122,7 +134,7 @@ const ProductsHeader = ({
                   />
                   <path
                     d="M12 3V21"
-                    stroke="currentColor" 
+                    stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -131,19 +143,23 @@ const ProductsHeader = ({
                   <path
                     d="M4.5 6.5L12 10L19.5 6.5"
                     stroke="currentColor"
-                    strokeWidth="2" 
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="text-gray-800 dark:text-white"
                   />
                 </svg>
-                <span className="text-xl font-bold text-gray-800 dark:text-white">React-E-Commerce</span>
+                <span className="text-xl font-bold text-gray-800 dark:text-white">
+                  React-E-Commerce
+                </span>
               </Link>
               <div className="items-center hidden ml-8 space-x-4 md:flex">
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className={`px-3 py-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-grayshade-400 ${
-                    location.pathname === '/' ? 'text-[#1f2937] dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-300'
+                    location.pathname === "/"
+                      ? "text-[#1f2937] dark:text-white font-semibold"
+                      : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   <div className="flex items-center">
@@ -151,18 +167,22 @@ const ProductsHeader = ({
                     Home
                   </div>
                 </Link>
-                <Link 
-                  to="/products" 
+                <Link
+                  to="/products"
                   className={`px-3 py-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-grayshade-400 ${
-                    location.pathname === '/products' ? 'text-[#1f2937] dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-300'
+                    location.pathname === "/products"
+                      ? "text-[#1f2937] dark:text-white font-semibold"
+                      : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   Products
                 </Link>
-                <Link 
-                  to="/about" 
+                <Link
+                  to="/about"
                   className={`px-3 py-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-grayshade-400 ${
-                    location.pathname === '/about' ? 'text-[#1f2937] dark:text-white font-semibold' : 'text-gray-700 dark:text-gray-300'
+                    location.pathname === "/about"
+                      ? "text-[#1f2937] dark:text-white font-semibold"
+                      : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   About
@@ -182,40 +202,53 @@ const ProductsHeader = ({
             </div>
           </div>
         </div>
-        
+
         {isProductsPage && (
           <div className="relative z-10 p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="mb-4 md:mb-0">
-                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{title}</h1>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                  {title}
+                </h1>
                 <p className="mt-1 text-gray-600 dark:text-gray-300">
-                  Showing <span className="font-semibold">{totalProducts}</span> products
+                  Showing <span className="font-semibold">{totalProducts}</span>{" "}
+                  products
                 </p>
               </div>
-              
+
               <div className="flex flex-col gap-3 sm:flex-row">
                 <div className="flex items-center overflow-hidden bg-gray-100 rounded-lg dark:bg-grayshade-400">
                   <select
                     value={sortOption}
                     onChange={handleSortChange}
-                    className="px-3 py-2 pr-8 text-gray-700 bg-transparent appearance-none focus:outline-none dark:text-white dark:bg-gray-700"
+                    className="w-full px-3 py-2 pr-8 text-gray-700 bg-gray-100 appearance-none focus:outline-none dark:text-white dark:bg-grayshade-400 [&>option]:bg-gray-100 [&>option]:dark:bg-grayshade-400"
                     aria-label="Sort products"
                   >
-                    <option value="default">Sort By</option>
-                    <option value="price">Price</option>
-                    <option value="name">Name</option>
-                    <option value="rating">Rating</option>
+                      <option value="default">Sort By</option>
+                      <option value="price">Price</option>
+                      <option value="name">Name</option>
+                      <option value="rating">Rating</option>
                   </select>
-                  <button 
+                  <button
                     onClick={toggleSortDirection}
-                    disabled={sortOption === 'default'}
-                    className={`px-3 py-2 ${sortOption === 'default' ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed' : 'text-gray-700 dark:text-white cursor-pointer hover:bg-gray-200 dark:hover:bg-grayshade-300'}`}
-                    aria-label={`Sort ${sortDirection === 'asc' ? 'ascending' : 'descending'}`}
+                    disabled={sortOption === "default"}
+                    className={`px-3 py-2 ${
+                      sortOption === "default"
+                        ? "text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                        : "text-gray-700 dark:text-white cursor-pointer hover:bg-gray-200 dark:hover:bg-grayshade-300"
+                    }`}
+                    aria-label={`Sort ${
+                      sortDirection === "asc" ? "ascending" : "descending"
+                    }`}
                   >
-                    {sortDirection === 'asc' ? <FaSortAmountUp /> : <FaSortAmountDown />}
+                    {sortDirection === "asc" ? (
+                      <FaSortAmountUp />
+                    ) : (
+                      <FaSortAmountDown />
+                    )}
                   </button>
                 </div>
-                
+
                 {hasActiveFilters && (
                   <button
                     onClick={onClearFilters}
@@ -228,11 +261,11 @@ const ProductsHeader = ({
                 )}
               </div>
             </div>
-            
+
             {hasActiveFilters && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
                 className="mt-4"
@@ -242,7 +275,7 @@ const ProductsHeader = ({
                     <MdFilterList className="mr-1" /> Active Filters:
                   </span>
                   {getFilterBadges().map((badge) => (
-                    <span 
+                    <span
                       key={badge.key}
                       className="px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-grayshade-400 dark:text-white"
                     >
@@ -259,4 +292,4 @@ const ProductsHeader = ({
   );
 };
 
-export default ProductsHeader; 
+export default ProductsHeader;
