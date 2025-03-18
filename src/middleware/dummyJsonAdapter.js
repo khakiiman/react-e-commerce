@@ -14,6 +14,7 @@ const dummyJsonClient = axios.create({
 const categoryCache = new Map();
 let categoriesListCache = null;
 let totalProductCountCache = null;
+let productsResponseCache = null;
 
 async function getCachedCategories() {
   if (categoriesListCache) {
@@ -200,6 +201,11 @@ export const productService = {
       
       const response = await dummyJsonClient.get(url, { params: dummyParams });
       
+      // Store the total count if it's available in this response
+      if (response.data && response.data.total) {
+        totalProductCountCache = response.data.total;
+      }
+      
       let products = [];
       if (response.data && response.data.products) {
         products = response.data.products;
@@ -225,7 +231,11 @@ export const productService = {
         convertedProducts.push(converted);
       }
       
-      return convertedProducts;
+      // Return the total along with the products to make it available to the component
+      return {
+        data: convertedProducts,
+        total: totalProductCountCache || convertedProducts.length
+      };
     } catch (error) {
       console.error('Error fetching products from DummyJSON:', error);
       throw new Error('Failed to fetch products');
@@ -254,10 +264,12 @@ export const productService = {
 
   getTotalProductCount: async () => {
     try {
+      // If we already have the total count from a previous products request, use it
       if (totalProductCountCache !== null) {
         return totalProductCountCache;
       }
       
+      // Otherwise make a minimal request to get the total count
       const response = await dummyJsonClient.get('/products?limit=1');
       totalProductCountCache = response.data.total || 100;
       return totalProductCountCache;
@@ -265,6 +277,11 @@ export const productService = {
       console.error('Error fetching product count from DummyJSON:', error);
       return 100;
     }
+  },
+
+  // Helper method to get the cached total count without making an API call
+  getCachedTotalProductCount: () => {
+    return totalProductCountCache;
   }
 };
 

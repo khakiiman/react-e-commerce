@@ -2,9 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { productService } from '../services/api';
 import { API_CONFIG } from '../constants/config';
 
-/**
- * Hook to fetch products with pagination and filters
- */
 export function useProducts(params) {
   return useQuery({
     queryKey: ['products', params],
@@ -14,9 +11,6 @@ export function useProducts(params) {
   });
 }
 
-/**
- * Hook to fetch a single product by ID
- */
 export function useProduct(id) {
   return useQuery({
     queryKey: ['product', id],
@@ -27,9 +21,6 @@ export function useProduct(id) {
   });
 }
 
-/**
- * Hook to fetch categories
- */
 export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
@@ -39,9 +30,6 @@ export function useCategories() {
   });
 }
 
-/**
- * Hook to get total product count (estimated)
- */
 export function useTotalProductCount() {
   return useQuery({
     queryKey: ['productCount'],

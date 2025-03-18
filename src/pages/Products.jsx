@@ -10,7 +10,7 @@ import addProductRatings from "../utils/helpers/addProductRatings";
 import NoProductFound from "../components/NoProductFound";
 import Pagination from "../components/Pagination";
 import ProductsHeader from "../components/ProductsHeader";
-import { useProducts, useTotalProductCount, useCategories } from "../hooks/useProductsApi";
+import { useProducts, useCategories } from "../hooks/useProductsApi";
 import { selectFavorites } from "../store/slices/favoritesSlice";
 
 function Products() {
@@ -46,15 +46,14 @@ function Products() {
   }, [getOffset, pageSize, query]);
   
   const { 
-    data: products = [], 
+    data: productsResponse = { data: [], total: 0 }, 
     isLoading, 
-    isError 
+    isError
   } = useProducts(apiParams);
   
-  const { 
-    data: totalProducts = 200,
-    isLoading: isCountLoading
-  } = useTotalProductCount();
+  // Extract products and total from the response
+  const products = productsResponse.data || [];
+  const totalProducts = productsResponse.total || 0;
   
   const totalPages = Math.ceil(totalProducts / pageSize);
   

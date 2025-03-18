@@ -34,7 +34,7 @@ const DeliveryInfo = () => (
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="flex flex-col items-center p-4 bg-gray-100 rounded-lg md:rounded-bl-lg md:rounded-tr-none dark:bg-gray-600"
+      className="flex flex-col items-center p-4 bg-gray-100 rounded-bl-lg md:rounded-tr-none dark:bg-gray-600"
     >
       <MdLocalShipping className="mb-2 text-3xl text-gray-700 dark:text-gray-300" />
       <h3 className="font-medium">Free Shipping</h3>
@@ -45,7 +45,7 @@ const DeliveryInfo = () => (
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="flex flex-col items-center p-4 mt-2 bg-gray-100 rounded-lg md:rounded-none dark:bg-gray-600 md:mt-0"
+      className="flex flex-col items-center p-4 mt-2 bg-gray-100 dark:bg-gray-600 md:mt-0"
     >
       <TbTruckDelivery className="mb-2 text-3xl text-gray-700 dark:text-gray-300" />
       <h3 className="font-medium">Fast Delivery</h3>
@@ -56,7 +56,7 @@ const DeliveryInfo = () => (
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
-      className="flex flex-col items-center p-4 mt-2 bg-gray-100 rounded-lg md:rounded-br-lg md:rounded-tl-none dark:bg-gray-600 md:mt-0"
+      className="flex flex-col items-center p-4 mt-2 bg-gray-100 rounded-br-lg md:rounded-tl-none dark:bg-gray-600 md:mt-0"
     >
       <BsBoxSeam className="mb-2 text-3xl text-gray-700 dark:text-gray-300" />
       <h3 className="font-medium">Easy Returns</h3>

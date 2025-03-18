@@ -2,9 +2,6 @@ import axios from 'axios';
 import { API_CONFIG } from '../constants/config.js';
 import dummyJsonProductService from '../middleware/dummyJsonAdapter.js';
 
-/**
- * API Error class for consistent error handling
- */
 export class ApiError extends Error {
   constructor(message, status, data = null) {
     super(message);
@@ -14,9 +11,6 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Create API client with default configuration
- */
 const createApiClient = () => {
   const client = axios.create({
     baseURL: API_CONFIG.BASE_URL,
@@ -73,23 +67,22 @@ const createApiClient = () => {
   return client;
 };
 
-
 const api = createApiClient();
 
-/**
- * Product API service
- * Using DummyJSON adapter to maintain compatibility with the existing frontend
- */
 export const productService = {
-  /**
-   * Get products with filters
-   * @param {Object} params - Query parameters
-   * @returns {Promise<Array>} Products data
-   */
+
   getProducts: async (params) => {
     try {
+      const result = await dummyJsonProductService.getProducts(params);
       
-      return await dummyJsonProductService.getProducts(params);
+      if (result && typeof result === 'object' && 'data' in result) {
+        return result;
+      }
+      
+      return {
+        data: result,
+        total: result.length
+      };
     } catch (error) {
       console.error('Error fetching products:', error);
       throw new ApiError(
@@ -99,11 +92,6 @@ export const productService = {
     }
   },
 
-  /**
-   * Get a single product by ID
-   * @param {number|string} id - Product ID
-   * @returns {Promise<Object>} Product data
-   */
   getProduct: async (id) => {
     try {
       
@@ -117,10 +105,6 @@ export const productService = {
     }
   },
 
-  /**
-   * Get all product categories
-   * @returns {Promise<Array>} Categories data
-   */
   getCategories: async () => {
     try {
       
@@ -134,10 +118,6 @@ export const productService = {
     }
   },
 
-  /**
-   * Get total product count
-   * @returns {Promise<number>} Total product count or estimate
-   */
   getTotalProductCount: async () => {
     try {
       
@@ -150,9 +130,6 @@ export const productService = {
   },
 };
 
-/**
- * Auth API service (placeholder - expand as needed)
- */
 export const authService = {
   login: async (credentials) => {
     try {
