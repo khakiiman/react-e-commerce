@@ -8,6 +8,8 @@ import { FaStar, FaShoppingCart, FaHeart, FaRegHeart } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 import { TbTruckDelivery } from "react-icons/tb";
 import { BsBoxSeam } from "react-icons/bs";
+import { BiErrorCircle } from "react-icons/bi";
+import { RiSignalWifiErrorFill } from "react-icons/ri";
 import AddToCart from "../components/AddToCart";
 import ImageSlider from "../components/ImageSlider";
 import { useProduct } from "../hooks/useProductsApi";
@@ -85,17 +87,61 @@ export default function DetailPage() {
       {isLoading ? (
         <ProductDetailSkeleton />
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-lg text-red-500 dark:text-red-400">
-            Error loading product details. Please try again.
-          </p>
-          <button 
-            onClick={refetch}
-            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-          >
-            Retry
-          </button>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden bg-white shadow-lg dark:bg-grayshade-400 rounded-xl"
+        >
+          <div className="flex flex-col items-center justify-center p-8 py-16 text-center">
+            <div className="p-6 mb-6 bg-gray-200 rounded-full dark:bg-gray-900">
+              <RiSignalWifiErrorFill className="w-24 h-24 text-gray-900 dark:text-gray-200" />
+            </div>
+            
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-3 text-2xl font-bold text-gray-800 dark:text-gray-100"
+            >
+              Unable to Load Product
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="max-w-md mb-8 text-base text-gray-600 dark:text-gray-300"
+            >
+              We encountered an issue while fetching the product details. This might be due to network connectivity or the product may no longer be available.
+            </motion.p>
+            
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onClick={refetch}
+                className="px-6 py-3 font-medium text-gray-100 transition-colors bg-gray-700 rounded-lg shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-offset-gray-700 dark:bg-gray-100 dark:text-gray-700 dark:hover:bg-gray-300"
+              >
+                Try Again
+              </motion.button>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Link
+                  to="/products"
+                  className="flex items-center justify-center px-6 py-3 font-medium text-gray-700 transition-colors bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2 dark:bg-gray-700 dark:border-gray-300 dark:text-gray-100 dark:hover:bg-gray-900 dark:focus:ring-offset-grayshade-900"
+                >
+                  Back to Products
+                </Link>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
       ) : product ? (
         <Suspense fallback={<LoadingSpinner />}>
           <motion.div

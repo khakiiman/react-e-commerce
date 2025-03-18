@@ -8,6 +8,7 @@ export function useProducts(params) {
     queryFn: () => productService.getProducts(params),
     staleTime: API_CONFIG.STALE_TIME,
     cacheTime: API_CONFIG.CACHE_TIME,
+    enabled: params ? !params.disabled : true,
   });
 }
 

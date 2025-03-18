@@ -4,7 +4,8 @@ import { useProducts } from "../hooks/useProductsApi";
 const productsContext = createContext();
 
 function ProductsProvider({ children }) {
-  const products = useProducts();
+  // Pass a special flag to disable automatic fetching when not needed
+  const products = useProducts({ disabled: true });
   
   return (
     <productsContext.Provider value={products}>
@@ -15,7 +16,7 @@ function ProductsProvider({ children }) {
 
 function useProductConsumer() {
   const context = useContext(productsContext);
-    return context;
+  return context;
 }
 
 function useGetProduct(id){
@@ -26,4 +27,4 @@ function useGetProduct(id){
 }
 
 export default ProductsProvider;
-export { useProductConsumer , useGetProduct};
+export { useProductConsumer, useGetProduct };

@@ -13,22 +13,40 @@ const dummyJsonClient = axios.create({
 
 const categoryCache = new Map();
 let categoriesListCache = null;
+let categoriesListPromise = null;
 let totalProductCountCache = null;
 let productsResponseCache = null;
 
 async function getCachedCategories() {
+  // If we already have the categories in cache, return them immediately
   if (categoriesListCache) {
     return categoriesListCache;
   }
   
-  try {
-    const response = await dummyJsonClient.get('/products/categories');
-    categoriesListCache = response.data;
-    return categoriesListCache;
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    return [];
+  // If there's already a request in progress, return that promise instead of creating a new one
+  if (categoriesListPromise) {
+    return categoriesListPromise;
   }
+  
+  // Create a new promise for the categories request
+  categoriesListPromise = (async () => {
+    try {
+      console.log('Fetching categories from API');
+      const response = await dummyJsonClient.get('/products/categories');
+      categoriesListCache = response.data;
+      return categoriesListCache;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return [];
+    } finally {
+      // After 5 minutes, allow a refresh of the cache if needed
+      setTimeout(() => {
+        categoriesListPromise = null;
+      }, 300000); // 5 minutes
+    }
+  })();
+  
+  return categoriesListPromise;
 }
 
 function getCategoryId(slug, index) {
@@ -69,6 +87,7 @@ export const convertProductFormat = async (product) => {
 
   if (typeof category === 'string') {
     try {
+      console.log(`Converting category format for product ${id}, category: ${category}`);
       const categoriesList = await getCachedCategories();
       
       if (categoriesList && Array.isArray(categoriesList)) {
@@ -87,6 +106,7 @@ export const convertProductFormat = async (product) => {
         if (categoryIndex !== -1) {
           categoryObj.id = categoryIndex + 1;
           categoryObj.name = category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ');
+          console.log(`Found category for product ${id}, id: ${categoryObj.id}, name: ${categoryObj.name}`);
         }
       }
     } catch (error) {
@@ -151,6 +171,15 @@ String.prototype.hashCode = function() {
 
 export const productService = {
   getProducts: async (params = {}) => {
+    // If the disabled flag is set, return empty result without making API call
+    if (params.disabled) {
+      console.log('Products API call disabled, returning empty result');
+      return {
+        data: [],
+        total: 0
+      };
+    }
+    
     try {
       const { 
         limit = 10, 
@@ -254,6 +283,7 @@ export const productService = {
 
   getCategories: async () => {
     try {
+      console.log('productService.getCategories called');
       const categoriesList = await getCachedCategories();
       return categoriesList.map(convertCategoryFormat);
     } catch (error) {

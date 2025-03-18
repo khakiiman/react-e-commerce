@@ -19,26 +19,28 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ToastProvider>
-          <ProductsProvider>
-            <Routes>
-              <Route element={<ProductsLayout />}>
-                <Route path="/products" element={<Products />} />
-              </Route>
-              <Route element={<Layout />}>
-                <Route
-                  index
-                  path="/home"
-                  element={<Navigate to="/" replace />}
-                />
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/toast-demo" element={<ToastDemo />} />
-                <Route path="/component-demo" element={<ComponentDemo />} />
-                <Route path="/products/:id" element={<DetailPage />} />
-                <Route path="/*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </ProductsProvider>
+          <Routes>
+            <Route element={<ProductsLayout />}>
+              <Route path="/products" element={
+                <ProductsProvider>
+                  <Products />
+                </ProductsProvider>
+              } />
+            </Route>
+            <Route element={<Layout />}>
+              <Route
+                index
+                path="/home"
+                element={<Navigate to="/" replace />}
+              />
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/toast-demo" element={<ToastDemo />} />
+              <Route path="/component-demo" element={<ComponentDemo />} />
+              <Route path="/products/:id" element={<DetailPage />} />
+              <Route path="/*" element={<NotFound />} />
+            </Route>
+          </Routes>
         </ToastProvider>
       </PersistGate>
     </Provider>
