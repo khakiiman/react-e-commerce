@@ -78,7 +78,7 @@ The DummyJSON API provides better images, more structured data, and more compreh
 You can test the adapter by running:
 
 ```bash
-node src/middleware/testAdapter.js
+npx ts-node src/middleware/testAdapter.ts
 ```
 
 This will run a series of tests to verify that the adapter is correctly transforming DummyJSON responses to the format expected by the frontend. 
