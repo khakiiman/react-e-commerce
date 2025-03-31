@@ -1,5 +1,4 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test';
-
 const config: PlaywrightTestConfig = {
   testDir: './src/tests',
   timeout: 30000,
@@ -16,7 +15,7 @@ const config: PlaywrightTestConfig = {
   ],
   use: {
     actionTimeout: 0,
-    baseURL: process.env.BASE_URL || 'http://localhost:5173',
+    baseURL: process.env.BASE_URL || 'http://localhost:3001',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video'
@@ -56,9 +55,8 @@ const config: PlaywrightTestConfig = {
   outputDir: 'test-results/',
   webServer: {
     command: 'npm run dev',
-    port: 5173,
+    port: 3001,
     reuseExistingServer: !process.env.CI,
   },
 };
-
 export default config; 

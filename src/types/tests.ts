@@ -1,73 +1,73 @@
-import { Page, Locator, BrowserContext, APIRequestContext } from '@playwright/test';
-import { Product, Category } from './api';
+import { APIRequestContext, BrowserContext, Locator, Page } from '@playwright/test';
 
-// Page Object Models
+import { Category, Product, ProductsParams } from './api';
 export interface BasePage {
   page: Page;
   goto(): Promise<void>;
 }
-
-export interface ProductsPage extends BasePage {
+export interface ProductsPage {
+  page: Page;
   productCards: Locator;
-  categoryFilter: Locator;
   searchInput: Locator;
+  categoryFilter: Locator;
   sortDropdown: Locator;
   paginationControls: Locator;
-  
+  priceMinInput: Locator;
+  priceMaxInput: Locator;
+  ratingSlider: Locator;
+  pageSizeSelect: Locator;
+  favoritesToggle: Locator;
+  goto(): Promise<void>;
   searchProducts(query: string): Promise<void>;
   filterByCategory(categoryId: number | string): Promise<void>;
   sortBy(sortOption: string): Promise<void>;
   goToPage(pageNumber: number): Promise<void>;
   getProductCount(): Promise<number>;
   clickProduct(productId: number | string): Promise<void>;
+  getFavoriteButton(productId: number | string): Promise<Locator>;
+  toggleFavorite(productId: number): Promise<void>;
+  filterByFavorites(): Promise<void>;
+  filterByPriceRange(minPrice: number, maxPrice: number): Promise<void>;
+  filterByMinRating(rating: number): Promise<void>;
+  setPageSize(size: number): Promise<void>;
 }
-
-export interface ProductDetailPage extends BasePage {
+export interface ProductDetailPage {
+  page: Page;
+  goto(productId: number): Promise<void>;
   productTitle: Locator;
   productPrice: Locator;
   productDescription: Locator;
-  productImages: Locator;
+  favoriteButton: Locator;
   addToCartButton: Locator;
-  
   getProductInfo(): Promise<Partial<Product>>;
-  addToCart(quantity?: number): Promise<void>;
+  isFavorite(): Promise<boolean>;
+  toggleFavorite(): Promise<void>;
 }
-
 export interface LoginPage extends BasePage {
   emailInput: Locator;
   passwordInput: Locator;
   loginButton: Locator;
   errorMessage: Locator;
-  
   login(email: string, password: string): Promise<void>;
   getErrorMessage(): Promise<string>;
 }
-
-// Test Fixtures
 export interface TestFixtures {
   page: Page;
   context: BrowserContext;
   request: APIRequestContext;
   authenticatedPage: Page;
 }
-
-// Test Data
 export interface TestProduct extends Product {
-  // Additional test-specific product properties
   isVisible?: boolean;
   testId?: string;
 }
-
 export interface TestCategory extends Category {
-  // Additional test-specific category properties
   testId?: string;
   displayOrder?: number;
 }
-
-// API Test Helpers
 export interface ApiTestHelpers {
-  getProducts(params?: Record<string, any>): Promise<TestProduct[]>;
+  getProducts(params?: ProductsParams): Promise<TestProduct[]>;
   getProduct(id: number | string): Promise<TestProduct>;
   getCategories(): Promise<TestCategory[]>;
   login(email: string, password: string): Promise<{ token: string }>;
-} 
+}

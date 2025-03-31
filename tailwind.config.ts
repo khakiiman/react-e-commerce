@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss';
 import plugin from 'tailwindcss/plugin';
-
 const config: Config = {
   content: [
     "./index.html",
@@ -10,18 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "purpleshade-100": "#374151",
-        "purpleshade-300": "#1f2937",
-        "purpleshade-400": "#111827",
-        "grayshade-50": "#999999",
-        "grayshade-100": "#4D4D4D",
-        "grayshade-200": "#333333",
-        "grayshade-300": "#262626",
-        "grayshade-400": "#1A1A1A",
-        "grayshade-500": "#141414",
-        "lightColor-100": "#FCFCFC",
-        "lightColor-200": "#F7F7F7",
-        "lightColor-300": "#F3F3F3",
+        "rich-black": "#0d1b2a",
+        "yinmn-blue": "#334970",
+        "glaucous": "#57789e",
+        "silver-lake-blue": "#778da9",
+        "white-smoke": "#f5f5f4",
       },
       fontFamily: {
         urbanist: ["urbanist", "sans-serif"],
@@ -31,8 +23,8 @@ const config: Config = {
           '100%': { transform: 'translateX(100%)' },
         },
         pulse: {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.7 },
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
         },
       },
       animation: {

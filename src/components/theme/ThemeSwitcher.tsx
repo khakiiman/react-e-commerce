@@ -1,54 +1,46 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FaSun, FaMoon } from "react-icons/fa";
-
-type ThemeType = "light" | "dark";
-
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { FaMoon, FaSun } from 'react-icons/fa';
+type ThemeType = 'light' | 'dark';
 function ThemeSwitcher() {
   const [theme, setTheme] = useState<ThemeType>(() => {
-    // Check for localStorage availability to avoid SSR issues
     if (typeof window !== 'undefined' && window.localStorage) {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
     }
-    // Use media query as fallback
-    return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches 
-      ? "dark" 
-      : "light";
+    return typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   });
-
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
   }, [theme]);
-
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
-
-  // Animation variants to match other navigation items
   const variants = {
     initial: { opacity: 0, y: -10 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.3
-      }
+      transition: {
+        duration: 0.3,
+      },
     },
-    hover: { 
+    hover: {
       y: -3,
       scale: 1.05,
-      transition: { 
+      transition: {
         duration: 0.2,
-        type: "spring", 
+        type: 'spring',
         stiffness: 400,
-        damping: 10
-      }
+        damping: 10,
+      },
     },
-    tap: { scale: 0.95 }
+    tap: { scale: 0.95 },
   };
-
   return (
     <motion.button
       onClick={toggleTheme}
@@ -58,24 +50,19 @@ function ThemeSwitcher() {
       whileHover="hover"
       whileTap="tap"
       className="flex flex-col items-center gap-1 text-gray-600 transition-colors dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       data-testid="theme-switcher"
     >
       <motion.div
         initial={false}
-        animate={{ rotate: theme === "dark" ? 360 : 0 }}
+        animate={{ rotate: theme === 'dark' ? 360 : 0 }}
         transition={{ duration: 0.3 }}
         className="text-xl"
       >
-        {theme === "dark" ? (
-          <FaMoon />
-        ) : (
-          <FaSun />
-        )}
+        {theme === 'dark' ? <FaMoon /> : <FaSun />}
       </motion.div>
-      <span className="hidden text-xs md:flex">{theme === "dark" ? "Dark" : "Light"}</span>
+      <span className="hidden text-xs md:flex">{theme === 'dark' ? 'Dark' : 'Light'}</span>
     </motion.button>
   );
 }
-
-export default ThemeSwitcher; 
+export default ThemeSwitcher;

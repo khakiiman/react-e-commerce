@@ -1,5 +1,5 @@
-import React from "react";
-import Button from "./ui/Button";
+import React from 'react';
+import Button from './ui/buttons/Button';
 
 interface PaginationProps {
   currentPage: number;
@@ -10,9 +10,7 @@ interface PaginationProps {
   onPageSizeChange?: (pageSize: number) => void;
   className?: string;
 }
-
-const DOTS = "...";
-
+const DOTS = '...';
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
@@ -20,22 +18,16 @@ const Pagination: React.FC<PaginationProps> = ({
   pageSizeOptions = [10, 20, 50],
   onPageChange,
   onPageSizeChange,
-  className = "",
+  className = '',
 }) => {
   const generatePageNumbers = (currentPage: number, totalPages: number): (number | string)[] => {
-    // Always show first page, last page, current page, and pages adjacent to current
     const pageNumbers: (number | string)[] = [];
-    
     if (totalPages <= 7) {
-      // If 7 or fewer pages, show all
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Always add first page
       pageNumbers.push(1);
-      
-      // Add dots or number after first page
       if (currentPage <= 3) {
         pageNumbers.push(2, 3, 4, DOTS, totalPages - 1);
       } else if (currentPage >= totalPages - 2) {
@@ -43,33 +35,25 @@ const Pagination: React.FC<PaginationProps> = ({
       } else {
         pageNumbers.push(DOTS, currentPage - 1, currentPage, currentPage + 1, DOTS);
       }
-      
-      // Always add last page
       if (totalPages > 1) {
         pageNumbers.push(totalPages);
       }
     }
-    
     return pageNumbers;
   };
-
   const handlePageChange = (page: number) => {
     if (page !== currentPage && page > 0 && page <= totalPages) {
       onPageChange(page);
     }
   };
-
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSize = parseInt(e.target.value, 10);
     if (onPageSizeChange) {
       onPageSizeChange(newSize);
     }
   };
-
   const pageNumbers = generatePageNumbers(currentPage, totalPages);
-
   if (totalPages <= 1) return null;
-
   return (
     <div
       className={`mt-10 mb-6 py-6 border-t border-gray-200 dark:border-gray-700 ${className}`}
@@ -100,7 +84,6 @@ const Pagination: React.FC<PaginationProps> = ({
           >
             &lsaquo;
           </Button>
-
           <div className="flex items-center gap-2 mx-2">
             {pageNumbers.map((pageNumber, index) => (
               <React.Fragment key={index}>
@@ -108,20 +91,16 @@ const Pagination: React.FC<PaginationProps> = ({
                   <span className="px-3 py-1 text-gray-500 dark:text-gray-400">...</span>
                 ) : (
                   <Button
-                    onClick={() =>
-                      handlePageChange(pageNumber as number)
-                    }
-                    variant={
-                      pageNumber === currentPage ? "primary" : "outline"
-                    }
+                    onClick={() => handlePageChange(pageNumber as number)}
+                    variant={pageNumber === currentPage ? 'primary' : 'outline'}
                     size="sm"
                     className={`${
                       pageNumber === currentPage
-                        ? "font-bold shadow-md"
-                        : "text-gray-700 dark:text-gray-300 shadow-sm hover:shadow transition-shadow"
+                        ? 'font-bold shadow-md'
+                        : 'text-gray-700 dark:text-gray-300 shadow-sm hover:shadow transition-shadow'
                     } w-9 h-9 flex items-center justify-center`}
                     aria-label={`Go to page ${pageNumber}`}
-                    aria-current={pageNumber === currentPage ? "page" : undefined}
+                    aria-current={pageNumber === currentPage ? 'page' : undefined}
                     data-testid={`page-${pageNumber}-button`}
                   >
                     {pageNumber}
@@ -130,7 +109,6 @@ const Pagination: React.FC<PaginationProps> = ({
               </React.Fragment>
             ))}
           </div>
-
           <Button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
@@ -154,7 +132,6 @@ const Pagination: React.FC<PaginationProps> = ({
             &raquo;
           </Button>
         </div>
-
         {onPageSizeChange && (
           <div className="flex items-center gap-3 bg-gray-50 dark:bg-grayshade-500 px-4 py-2 rounded-lg shadow-sm">
             <label
@@ -171,7 +148,7 @@ const Pagination: React.FC<PaginationProps> = ({
               aria-label="Select page size"
               data-testid="page-size-select"
             >
-              {pageSizeOptions.map((size) => (
+              {pageSizeOptions.map(size => (
                 <option key={size} value={size}>
                   {size}
                 </option>
@@ -180,12 +157,10 @@ const Pagination: React.FC<PaginationProps> = ({
           </div>
         )}
       </div>
-      
       <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
         Showing page {currentPage} of {totalPages}
       </div>
     </div>
   );
 };
-
-export default Pagination; 
+export default Pagination;

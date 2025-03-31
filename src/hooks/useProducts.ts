@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { productService } from '../services/api';
 import { Product, ProductsParams } from '../types/api';
 import { UseProductsReturn } from '../types/hooks';
@@ -12,16 +13,14 @@ export const useProducts = (): UseProductsReturn => {
   const fetchProducts = async (params: ProductsParams = {}) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await productService.getProducts(params);
-      
+
       if ('data' in response) {
         setProducts(response.data);
         setTotalCount(response.total);
       } else {
-        // This branch should never execute with our updated types
-        // but kept for backward compatibility
         setProducts(response as unknown as Product[]);
         setTotalCount((response as unknown as Product[]).length || 0);
       }
@@ -36,4 +35,4 @@ export const useProducts = (): UseProductsReturn => {
   return { products, isLoading, error, totalCount, fetchProducts };
 };
 
-export default useProducts; 
+export default useProducts;

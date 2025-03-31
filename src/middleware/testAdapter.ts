@@ -1,4 +1,4 @@
-import { Product, Category, ProductsParams, ProductsResponse } from '../types/api';
+import { Category, Product, ProductsParams, ProductsResponse } from '../types/api';
 
 // Mock data for testing
 const categories: Category[] = [
@@ -41,14 +41,14 @@ const categories: Category[] = [
 
 const generateMockProducts = (count: number): Product[] => {
   const products: Product[] = [];
-  
+
   for (let i = 1; i <= count; i++) {
     const categoryIndex = Math.floor(Math.random() * categories.length);
     const category = categories[categoryIndex];
     const price = Math.floor(Math.random() * 1000) + 1;
     const discountPercentage = Math.floor(Math.random() * 30);
     const stock = Math.floor(Math.random() * 100);
-    
+
     products.push({
       id: i,
       title: `Product ${i}`,
@@ -66,7 +66,7 @@ const generateMockProducts = (count: number): Product[] => {
       stock,
     });
   }
-  
+
   return products;
 };
 
@@ -85,92 +85,84 @@ const simulateNetworkDelay = async (): Promise<void> => {
 export const productService = {
   getProducts: async (params: ProductsParams = {}): Promise<ProductsResponse> => {
     await simulateNetworkDelay();
-    
-    const { 
-      limit = 10, 
+
+    const {
+      limit = 10,
       offset = 0,
       title,
       price,
       price_min,
       price_max,
       categoryId,
-      min_rating
+      min_rating,
     } = params;
-    
+
     // Filter products based on params
     let filteredProducts = [...mockProducts];
-    
+
     if (title) {
       const searchTerm = title.toLowerCase();
-      filteredProducts = filteredProducts.filter(product => 
+      filteredProducts = filteredProducts.filter(product =>
         product.title.toLowerCase().includes(searchTerm)
       );
     }
-    
+
     if (price) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.price === Number(price)
-      );
+      filteredProducts = filteredProducts.filter(product => product.price === Number(price));
     }
-    
+
     if (price_min) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.price >= Number(price_min)
-      );
+      filteredProducts = filteredProducts.filter(product => product.price >= Number(price_min));
     }
-    
+
     if (price_max) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.price <= Number(price_max)
-      );
+      filteredProducts = filteredProducts.filter(product => product.price <= Number(price_max));
     }
-    
+
     if (categoryId) {
       const categoryIdNum = Number(categoryId);
-      filteredProducts = filteredProducts.filter(product => 
-        product.category.id === categoryIdNum
-      );
+      filteredProducts = filteredProducts.filter(product => product.category.id === categoryIdNum);
     }
-    
+
     // Filter by minimum rating
     if (min_rating) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.rating !== undefined && product.rating >= Number(min_rating)
+      filteredProducts = filteredProducts.filter(
+        product => product.rating !== undefined && product.rating >= Number(min_rating)
       );
     }
-    
+
     // Paginate results
     const totalCount = filteredProducts.length;
     const paginatedProducts = filteredProducts.slice(offset, offset + limit);
-    
+
     return {
       data: paginatedProducts,
-      total: totalCount
+      total: totalCount,
     };
   },
-  
+
   getProduct: async (id: number | string): Promise<Product> => {
     await simulateNetworkDelay();
-    
+
     const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
     const product = mockProducts.find(p => p.id === numericId);
-    
+
     if (!product) {
       throw new Error(`Product with ID ${id} not found`);
     }
-    
+
     return product;
   },
-  
+
   getCategories: async (): Promise<Category[]> => {
     await simulateNetworkDelay();
     return categories;
   },
-  
+
   getTotalProductCount: async (): Promise<number> => {
     await simulateNetworkDelay();
     return mockProducts.length;
-  }
+  },
 };
 
-export default productService; 
+export default productService;

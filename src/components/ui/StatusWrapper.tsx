@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import LoadingState from './LoadingState';
+import colorSystem from '@/styles/colorSystem';
 import ErrorState from './ErrorState';
+import LoadingState from './LoadingState';
 
 interface StatusWrapperProps {
   isLoading?: boolean;
@@ -17,10 +18,6 @@ interface StatusWrapperProps {
   emptyText?: string;
 }
 
-/**
- * A wrapper component that handles loading, error and empty states
- * Can be used to wrap any component that fetches data
- */
 const StatusWrapper: React.FC<StatusWrapperProps> = ({
   isLoading = false,
   isError = false,
@@ -35,34 +32,34 @@ const StatusWrapper: React.FC<StatusWrapperProps> = ({
   errorText = 'An error occurred while fetching data.',
   emptyText = 'No data available.',
 }) => {
-  
   if (isLoading) {
-    return loadingComponent ? <>{loadingComponent}</> : <LoadingState text={loadingText} />;
+    return loadingComponent ? <>{loadingComponent}</> : <LoadingState message={loadingText} />;
   }
 
-  
   if (isError) {
     const errorMessage = error?.message || errorText;
-    return errorComponent ? <>{errorComponent}</> : (
-      <ErrorState 
-        message={errorMessage} 
-        onRetry={onRetry}
-        showRetry={!!onRetry}
+    return errorComponent ? (
+      <>{errorComponent}</>
+    ) : (
+      <ErrorState
+        message={errorMessage}
+        error={error ?? undefined}
+        resetErrorBoundary={onRetry || undefined}
       />
     );
   }
 
-  
   if (isEmpty) {
-    return emptyComponent ? <>{emptyComponent}</> : (
+    return emptyComponent ? (
+      <>{emptyComponent}</>
+    ) : (
       <div className="flex flex-col items-center justify-center text-center p-6 min-h-[200px]">
-        <p className="text-gray-500 dark:text-gray-400">{emptyText}</p>
+        <p className={colorSystem.light.text.tertiary}>{emptyText}</p>
       </div>
     );
   }
 
-  
   return <>{children}</>;
 };
 
-export default StatusWrapper; 
+export default StatusWrapper;

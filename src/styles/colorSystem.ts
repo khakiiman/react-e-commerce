@@ -1,153 +1,118 @@
-/**
- * Application Color System
- * 
- * This file defines a grayscale-based color system for the entire application.
- * We use a consistent set of gray shades for various UI elements to ensure
- * harmony between light and dark themes.
- */
-
 export const colorSystem = {
   light: {
-    // Background colors
     background: {
-      primary: 'bg-white',
-      secondary: 'bg-gray-50',
-      tertiary: 'bg-gray-100',
-      elevated: 'bg-white shadow-sm',
-      card: 'bg-white border border-gray-200 shadow-sm',
-      input: 'bg-white border border-gray-300',
-      badge: 'bg-gray-100',
-      highlight: 'bg-gray-50',
-      skeleton: 'bg-gray-200',
-      hover: 'hover:bg-gray-100',
-      activeHover: 'hover:bg-gray-200',
+      primary: 'bg-white-smoke',
+      secondary: 'bg-silver-lake-blue/10',
+      tertiary: 'bg-silver-lake-blue/20',
+      elevated: 'bg-white-smoke shadow-sm',
+      card: 'bg-white-smoke border border-silver-lake-blue/30 shadow-sm',
+      input: 'bg-white-smoke border border-silver-lake-blue/50',
+      badge: 'bg-silver-lake-blue/20',
+      highlight: 'bg-silver-lake-blue/10',
+      skeleton: 'bg-silver-lake-blue/30',
+      hover: 'hover:bg-silver-lake-blue/20',
+      activeHover: 'hover:bg-silver-lake-blue/30',
     },
-
-    // Text colors
     text: {
-      primary: 'text-gray-900',
-      secondary: 'text-gray-700',
-      tertiary: 'text-gray-500',
-      disabled: 'text-gray-400',
-      inverse: 'text-white',
-      link: 'text-gray-800 hover:text-black',
-      heading: 'text-gray-900',
+      primary: 'text-rich-black',
+      secondary: 'text-yinmn-blue',
+      tertiary: 'text-glaucous',
+      disabled: 'text-silver-lake-blue',
+      inverse: 'text-white-smoke',
+      link: 'text-yinmn-blue hover:text-rich-black',
+      heading: 'text-rich-black',
     },
-
-    // Border colors
     border: {
-      primary: 'border-gray-200',
-      secondary: 'border-gray-300',
-      focus: 'focus:border-gray-500',
-      input: 'border-gray-300',
+      primary: 'border-silver-lake-blue/30',
+      secondary: 'border-silver-lake-blue/50',
+      focus: 'focus:border-glaucous',
+      input: 'border-silver-lake-blue/50',
     },
-
-    // Interactive element states
     interactive: {
-      default: 'bg-gray-100 text-gray-900',
-      hover: 'hover:bg-gray-200',
-      active: 'active:bg-gray-300',
-      selected: 'bg-gray-800 text-white',
-      disabled: 'bg-gray-100 text-gray-400',
-      focus: 'focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50',
+      default: 'bg-silver-lake-blue/20 text-rich-black',
+      hover: 'hover:bg-silver-lake-blue/30',
+      active: 'active:bg-silver-lake-blue/40',
+      selected: 'bg-yinmn-blue text-white-smoke',
+      disabled: 'bg-silver-lake-blue/20 text-silver-lake-blue',
+      focus: 'focus:ring-2 focus:ring-glaucous focus:ring-opacity-50',
     },
-
-    // Button variants
     button: {
-      primary: 'bg-gray-900 hover:bg-black text-white',
-      secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900',
-      outline: 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-50',
-      ghost: 'text-gray-700 hover:bg-gray-100',
-      danger: 'bg-gray-900 hover:bg-black text-white',
+      primary: 'bg-yinmn-blue hover:bg-rich-black text-white-smoke',
+      secondary: 'bg-silver-lake-blue hover:bg-glaucous text-white-smoke',
+      outline:
+        'bg-white-smoke border border-silver-lake-blue text-yinmn-blue hover:bg-silver-lake-blue/10',
+      ghost: 'text-yinmn-blue hover:bg-silver-lake-blue/20',
+      danger: 'bg-rich-black hover:bg-yinmn-blue text-white-smoke',
     },
-
-    // Icons
     icon: {
-      primary: 'text-gray-700',
-      secondary: 'text-gray-500',
-      tertiary: 'text-gray-400',
-      interactive: 'text-gray-500 hover:text-gray-900',
+      primary: 'text-yinmn-blue',
+      secondary: 'text-glaucous',
+      tertiary: 'text-silver-lake-blue',
+      interactive: 'text-glaucous hover:text-rich-black',
     },
-
-    // Statuses
     status: {
-      error: 'bg-gray-800 text-white',
-      success: 'bg-gray-700 text-white',
-      warning: 'bg-gray-600 text-white',
-      info: 'bg-gray-500 text-white',
+      error: 'bg-rich-black text-white-smoke',
+      success: 'bg-yinmn-blue text-white-smoke',
+      warning: 'bg-glaucous text-white-smoke',
+      info: 'bg-silver-lake-blue text-white-smoke',
     },
   },
-
   dark: {
-    // Background colors
     background: {
-      primary: 'bg-gray-900',
-      secondary: 'bg-gray-800',
-      tertiary: 'bg-gray-700',
-      elevated: 'bg-gray-800 shadow-md',
-      card: 'bg-gray-800 border border-gray-700 shadow-md',
-      input: 'bg-gray-800 border border-gray-700',
-      badge: 'bg-gray-700',
-      highlight: 'bg-gray-800',
-      skeleton: 'bg-gray-700',
-      hover: 'hover:bg-gray-700',
-      activeHover: 'hover:bg-gray-600',
+      primary: 'bg-rich-black',
+      secondary: 'bg-yinmn-blue',
+      tertiary: 'bg-glaucous',
+      elevated: 'bg-yinmn-blue shadow-md',
+      card: 'bg-yinmn-blue border border-glaucous shadow-md',
+      input: 'bg-yinmn-blue border border-glaucous',
+      badge: 'bg-glaucous',
+      highlight: 'bg-yinmn-blue',
+      skeleton: 'bg-glaucous',
+      hover: 'hover:bg-glaucous',
+      activeHover: 'hover:bg-silver-lake-blue',
     },
-
-    // Text colors
     text: {
-      primary: 'text-gray-100',
-      secondary: 'text-gray-300',
-      tertiary: 'text-gray-400',
-      disabled: 'text-gray-500',
-      inverse: 'text-gray-900',
-      link: 'text-gray-300 hover:text-white',
-      heading: 'text-gray-100',
+      primary: 'text-white-smoke',
+      secondary: 'text-white-smoke',
+      tertiary: 'text-glaucous/90',
+      disabled: 'text-glaucous/70',
+      inverse: 'text-rich-black',
+      link: 'text-silver-lake-blue hover:text-white-smoke',
+      heading: 'text-white-smoke',
     },
-
-    // Border colors
     border: {
-      primary: 'border-gray-700',
-      secondary: 'border-gray-600',
-      focus: 'focus:border-gray-500',
-      input: 'border-gray-700',
+      primary: 'border-glaucous',
+      secondary: 'border-silver-lake-blue/70',
+      focus: 'focus:border-silver-lake-blue',
+      input: 'border-glaucous',
     },
-
-    // Interactive element states
     interactive: {
-      default: 'bg-gray-700 text-gray-100',
-      hover: 'hover:bg-gray-600',
-      active: 'active:bg-gray-500',
-      selected: 'bg-gray-100 text-gray-900',
-      disabled: 'bg-gray-700 text-gray-500',
-      focus: 'focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50',
+      default: 'bg-glaucous text-white-smoke',
+      hover: 'hover:bg-silver-lake-blue',
+      active: 'active:bg-silver-lake-blue/80',
+      selected: 'bg-white-smoke text-rich-black',
+      disabled: 'bg-glaucous text-glaucous/70',
+      focus: 'focus:ring-2 focus:ring-silver-lake-blue focus:ring-opacity-50',
     },
-
-    // Button variants
     button: {
-      primary: 'bg-gray-200 hover:bg-white text-gray-900',
-      secondary: 'bg-gray-700 hover:bg-gray-600 text-gray-100',
-      outline: 'bg-gray-800 border border-gray-600 text-gray-300 hover:bg-gray-700',
-      ghost: 'text-gray-300 hover:bg-gray-700',
-      danger: 'bg-gray-200 hover:bg-white text-gray-900',
+      primary: 'bg-white-smoke hover:bg-silver-lake-blue text-rich-black',
+      secondary: 'bg-glaucous hover:bg-silver-lake-blue text-white-smoke',
+      outline: 'bg-yinmn-blue border border-glaucous text-silver-lake-blue hover:bg-glaucous',
+      ghost: 'text-silver-lake-blue hover:bg-glaucous',
+      danger: 'bg-white-smoke hover:bg-silver-lake-blue text-rich-black',
     },
-
-    // Icons
     icon: {
-      primary: 'text-gray-300',
-      secondary: 'text-gray-400',
-      tertiary: 'text-gray-500',
-      interactive: 'text-gray-400 hover:text-gray-100',
+      primary: 'text-silver-lake-blue',
+      secondary: 'text-glaucous',
+      tertiary: 'text-glaucous/70',
+      interactive: 'text-glaucous hover:text-white-smoke',
     },
-
-    // Statuses 
     status: {
-      error: 'bg-gray-200 text-gray-900',
-      success: 'bg-gray-300 text-gray-900',
-      warning: 'bg-gray-400 text-gray-900',
-      info: 'bg-gray-500 text-gray-900',
+      error: 'bg-white-smoke text-rich-black',
+      success: 'bg-silver-lake-blue text-rich-black',
+      warning: 'bg-glaucous text-white-smoke',
+      info: 'bg-yinmn-blue text-white-smoke',
     },
-  }
+  },
 };
-
-export default colorSystem; 
+export default colorSystem;

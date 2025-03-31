@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-// Define types for our data structures
 interface Product {
   id: number;
   title: string;
@@ -23,7 +22,6 @@ interface FavoritesContextType {
   isFavorite: (productId: number) => boolean;
 }
 
-// Create the context with a default value of undefined
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 interface FavoritesProviderProps {
@@ -43,17 +41,20 @@ export function FavoritesProvider({ children }: FavoritesProviderProps): JSX.Ele
   const toggleFavorite = (product: Product): void => {
     setFavorites(prevFavorites => {
       const isProductFavorite = prevFavorites.some(fav => fav.id === product.id);
-      
+
       if (isProductFavorite) {
         return prevFavorites.filter(fav => fav.id !== product.id);
       } else {
-        return [...prevFavorites, { 
-          id: product.id, 
-          title: product.title,
-          price: product.price,
-          image: product.images?.[0] || '',
-          category: product.category
-        }];
+        return [
+          ...prevFavorites,
+          {
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.images?.[0] || '',
+            category: product.category,
+          },
+        ];
       }
     });
   };
@@ -75,4 +76,4 @@ export function useFavorites(): FavoritesContextType {
     throw new Error('useFavorites must be used within a FavoritesProvider');
   }
   return context;
-} 
+}

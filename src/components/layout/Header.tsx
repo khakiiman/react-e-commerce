@@ -1,83 +1,70 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  FaHome,
-  FaGithub,
-  FaShoppingBag,
-  FaInfoCircle,
-  FaBars,
-  FaTimes
-} from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import ThemeSwitcher from "../theme/ThemeSwitcher";
+'use client';
+import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useState } from 'react';
+import { FaBars, FaGithub, FaHome, FaInfoCircle, FaShoppingBag, FaTimes } from 'react-icons/fa';
 
+import ThemeSwitcher from '../theme/ThemeSwitcher';
 interface HeaderProps {
   showNav?: boolean;
 }
-
 const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Define animations
   const navItemVariants = {
     initial: { opacity: 0, y: -10 },
-    animate: (i: number) => ({ 
-      opacity: 1, 
+    animate: (i: number) => ({
+      opacity: 1,
       y: 0,
-      transition: { 
+      transition: {
         delay: i * 0.1,
-        duration: 0.3
-      }
+        duration: 0.3,
+      },
     }),
-    hover: { 
+    hover: {
       y: -3,
       scale: 1.05,
-      transition: { 
+      transition: {
         duration: 0.2,
-        type: "spring", 
+        type: 'spring',
         stiffness: 400,
-        damping: 10
-      }
+        damping: 10,
+      },
     },
-    tap: { scale: 0.95 }
+    tap: { scale: 0.95 },
   };
-
-  // Mobile menu animations
   const mobileMenuVariants = {
     closed: {
       opacity: 0,
       height: 0,
       transition: {
         duration: 0.3,
-        when: "afterChildren",
+        when: 'afterChildren',
         staggerChildren: 0.05,
-        staggerDirection: -1
-      }
+        staggerDirection: -1,
+      },
     },
     open: {
       opacity: 1,
-      height: "auto",
+      height: 'auto',
       transition: {
         duration: 0.3,
-        when: "beforeChildren",
+        when: 'beforeChildren',
         staggerChildren: 0.05,
-        staggerDirection: 1
-      }
-    }
+        staggerDirection: 1,
+      },
+    },
   };
-
   const mobileNavItemVariants = {
     closed: { opacity: 0, x: -10 },
-    open: { opacity: 1, x: 0 }
+    open: { opacity: 1, x: 0 },
   };
-
-  // Helper to check if a path is active
   const isActivePath = (path: string) => {
-    if (path === "/") return location.pathname === "/";
-    return location.pathname.startsWith(path);
+    const currentPath = pathname || '';
+    if (path === '/') return currentPath === '/';
+    return currentPath.startsWith(path);
   };
-
   return (
     <header className="sticky top-0 z-50 w-full shadow-sm bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
       <div className="container px-4 py-4 mx-auto sm:px-6 max-w-7xl">
@@ -87,20 +74,21 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
           transition={{ duration: 0.4 }}
           className="flex items-center justify-between"
         >
-          {/* Logo */}
+          {}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             className="flex items-center gap-3"
           >
-            <Link to="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <FaShoppingBag className="w-8 h-8 text-gray-800 dark:text-gray-100" />
-              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-gray-100">ReactShop</span>
+              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-gray-100">
+                E-Commerce Shop
+              </span>
             </Link>
           </motion.div>
-
-          {/* Mobile menu toggle */}
+          {}
           <div className="flex items-center md:hidden">
             <ThemeSwitcher />
             {showNav && (
@@ -113,16 +101,11 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                 aria-label="Toggle menu"
                 data-testid="mobile-menu-toggle"
               >
-                {mobileMenuOpen ? (
-                  <FaTimes className="w-6 h-6" />
-                ) : (
-                  <FaBars className="w-6 h-6" />
-                )}
+                {mobileMenuOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
               </motion.button>
             )}
           </div>
-
-          {/* Desktop Navigation */}
+          {}
           {showNav && (
             <nav className="items-center hidden space-x-6 md:flex">
               <motion.div
@@ -134,21 +117,20 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                 whileTap="tap"
               >
                 <Link
-                  to="/"
+                  href="/"
                   className="flex flex-col items-center gap-1 text-gray-600 transition-colors dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                   aria-label="Home"
                 >
                   <FaHome className="text-xl" />
                   <span className="text-xs">Home</span>
-                  {isActivePath("/") && !isActivePath("/products") && (
-                    <motion.span 
+                  {isActivePath('/') && !isActivePath('/products') && (
+                    <motion.span
                       layoutId="activeIndicator"
                       className="block w-full h-0.5 mt-1 bg-gray-900 rounded-full dark:bg-gray-100"
                     ></motion.span>
                   )}
                 </Link>
               </motion.div>
-
               <motion.div
                 custom={1}
                 variants={navItemVariants}
@@ -158,26 +140,25 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                 whileTap="tap"
               >
                 <Link
-                  to="/products"
+                  href="/products"
                   className={`flex flex-col items-center gap-1 transition-colors ${
-                    isActivePath("/products")
-                      ? "text-gray-900 dark:text-white font-medium" 
-                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    isActivePath('/products')
+                      ? 'text-gray-900 dark:text-white font-medium'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                   }`}
                   aria-label="Products"
-                  aria-current={isActivePath("/products") ? "page" : undefined}
+                  aria-current={isActivePath('/products') ? 'page' : undefined}
                 >
                   <FaShoppingBag className="text-xl" />
                   <span className="text-xs">Products</span>
-                  {isActivePath("/products") && (
-                    <motion.span 
+                  {isActivePath('/products') && (
+                    <motion.span
                       layoutId="activeIndicator"
                       className="block w-full h-0.5 mt-1 bg-gray-900 rounded-full dark:bg-gray-100"
                     ></motion.span>
                   )}
                 </Link>
               </motion.div>
-
               <motion.div
                 custom={2}
                 variants={navItemVariants}
@@ -187,26 +168,25 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                 whileTap="tap"
               >
                 <Link
-                  to="/about"
+                  href="/about"
                   className={`flex flex-col items-center gap-1 transition-colors ${
-                    isActivePath("/about")
-                      ? "text-gray-900 dark:text-white font-medium" 
-                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    isActivePath('/about')
+                      ? 'text-gray-900 dark:text-white font-medium'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                   }`}
                   aria-label="About"
-                  aria-current={isActivePath("/about") ? "page" : undefined}
+                  aria-current={isActivePath('/about') ? 'page' : undefined}
                 >
                   <FaInfoCircle className="text-xl" />
                   <span className="text-xs">About</span>
-                  {isActivePath("/about") && (
-                    <motion.span 
+                  {isActivePath('/about') && (
+                    <motion.span
                       layoutId="activeIndicator"
                       className="block w-full h-0.5 mt-1 bg-gray-900 rounded-full dark:bg-gray-100"
                     ></motion.span>
                   )}
                 </Link>
               </motion.div>
-
               <motion.div
                 custom={3}
                 variants={navItemVariants}
@@ -228,8 +208,7 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
               </motion.div>
             </nav>
           )}
-
-          {/* Secondary Navigation (Desktop) */}
+          {}
           <div className="items-center hidden space-x-4 md:flex">
             <motion.div
               custom={6}
@@ -244,8 +223,7 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
             </motion.div>
           </div>
         </motion.div>
-
-        {/* Mobile Menu */}
+        {}
         {showNav && (
           <AnimatePresence>
             {mobileMenuOpen && (
@@ -257,16 +235,13 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                 exit="closed"
               >
                 <motion.nav className="flex flex-col py-4 mt-2 space-y-3 border-t border-gray-200 dark:border-gray-700">
-                  <motion.div 
-                    className="flex justify-between"
-                    variants={mobileNavItemVariants}
-                  >
+                  <motion.div className="flex justify-between" variants={mobileNavItemVariants}>
                     <Link
-                      to="/"
+                      href="/"
                       className={`flex items-center gap-3 px-2 py-2 rounded-md ${
-                        isActivePath("/") && !isActivePath("/products")
-                          ? "text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800" 
-                          : "text-gray-600 dark:text-gray-300"
+                        isActivePath('/') && !isActivePath('/products')
+                          ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
+                          : 'text-gray-600 dark:text-gray-300'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -274,16 +249,13 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                       <span>Home</span>
                     </Link>
                   </motion.div>
-                  
-                  <motion.div 
-                    variants={mobileNavItemVariants}
-                  >
+                  <motion.div variants={mobileNavItemVariants}>
                     <Link
-                      to="/products"
+                      href="/products"
                       className={`flex items-center gap-3 px-2 py-2 rounded-md ${
-                        isActivePath("/products")
-                          ? "text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800" 
-                          : "text-gray-600 dark:text-gray-300"
+                        isActivePath('/products')
+                          ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
+                          : 'text-gray-600 dark:text-gray-300'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -291,16 +263,13 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                       <span>Products</span>
                     </Link>
                   </motion.div>
-                  
-                  <motion.div 
-                    variants={mobileNavItemVariants}
-                  >
+                  <motion.div variants={mobileNavItemVariants}>
                     <Link
-                      to="/about"
+                      href="/about"
                       className={`flex items-center gap-3 px-2 py-2 rounded-md ${
-                        isActivePath("/about")
-                          ? "text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800" 
-                          : "text-gray-600 dark:text-gray-300"
+                        isActivePath('/about')
+                          ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
+                          : 'text-gray-600 dark:text-gray-300'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -308,10 +277,7 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
                       <span>About</span>
                     </Link>
                   </motion.div>
-                  
-                  <motion.div 
-                    variants={mobileNavItemVariants}
-                  >
+                  <motion.div variants={mobileNavItemVariants}>
                     <a
                       href="https://github.com/khakiiman/react-e-commerce"
                       target="_blank"
@@ -332,5 +298,4 @@ const Header: React.FC<HeaderProps> = ({ showNav = true }) => {
     </header>
   );
 };
-
-export default Header; 
+export default Header;

@@ -1,97 +1,127 @@
-# React Shop
+# Nextjs E-Commerce Shop
 
-A modern e-commerce application built with React and TypeScript.
+A full-stack e-commerce application built with Next.js App Router, TypeScript, and Tailwind CSS.
 
-## Features
+## Project Structure
 
-- React 18 with TypeScript
-- Redux Toolkit with typed state and actions
-- RESTful API integration with type-safe API layer
-- Responsive design with Tailwind CSS
-- Automated testing with Playwright
+This project follows modern Next.js 14+ best practices for structuring a large-scale application:
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v16 or later)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone https://github.com/khakiiman/react-e-commerce.git
-cd react-shop
+```
+my-nextjs-project/
+│
+├── src/                      # Source files
+│   ├── app/                  # Next.js App Router
+│   │   ├── (auth)/           # Auth route group
+│   │   ├── products/         # Products routes
+│   │   │   ├── [id]/         # Dynamic product routes
+│   │   ├── api/              # API routes
+│   │   ├── layout.tsx        # Root layout
+│   │   ├── page.tsx          # Home page
+│   │
+│   ├── components/           # UI Components
+│   │   ├── ui/               # Generic UI components
+│   │   │   ├── buttons/      # Button components
+│   │   │   ├── cards/        # Card components
+│   │   │   ├── inputs/       # Input components
+│   │   │   ├── modals/       # Modal components
+│   │   ├── forms/            # Form components
+│   │   ├── layouts/          # Layout components
+│   │   ├── common/           # Common components
+│   │
+│   ├── config/               # Configuration
+│   │   ├── constants/        # App constants
+│   │
+│   ├── lib/                  # Library code
+│   │   ├── utils/            # Utility functions
+│   │   ├── hooks/            # Custom hooks
+│   │   ├── transitions/      # Transition animations
+│   │
+│   ├── contexts/             # React context providers
+│   ├── hooks/                # Application hooks
+│   ├── services/             # External services
+│   ├── store/                # State management
+│   ├── styles/               # Global styles
+│   ├── types/                # TypeScript types
+│
+├── public/                   # Static files
+├── next.config.mjs           # Next.js configuration
+├── tsconfig.json             # TypeScript configuration
+├── tailwind.config.ts        # Tailwind CSS configuration
 ```
 
-2. Install dependencies
+This structure follows best practices for large-scale Next.js applications with the App Router, ensuring:
+
+- Logical organization of components
+- Clear separation of concerns
+- Optimized for code reuse and maintainability
+- Better team collaboration
+- Improved discoverability
+- Scalability for future growth
+
+## Atomic Design Structure
+
+The components follow atomic design principles:
+
+1. **Atoms**: Basic UI building blocks (Button, Input, NavLink)
+2. **Molecules**: Combinations of atoms (AppHeader, FormGroup, Card)
+3. **Organisms**: Complex UI sections (Header, ProductList, Checkout)
+4. **Templates**: Page-level structures (MainLayout, ProductLayout)
+5. **Pages**: Specific instances combining templates with data (app/page.js)
+
+## Key Features
+
+- Server-side rendering and static site generation
+- Dynamic routing with App Router
+- Global state management with Redux
+- Data fetching with React Query
+- Styling with Tailwind CSS
+- Dark mode support
+- TypeScript for type safety
+
+## Development
+
 ```bash
+# Install dependencies
 npm install
-# or
-yarn install
-```
 
-3. Start the development server
-```bash
+# Run the development server
 npm run dev
-# or
-yarn dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run tests
+npm test
 ```
 
-## TypeScript Support
+## Component Generation
 
-This project uses TypeScript for strong typing and better development experience. Key type definitions include:
-
-- API Schema types (`src/types/api.ts`)
-- Redux Store types (`src/types/store.ts`)
-- React component prop types
-- Custom hook return types (`src/types/hooks.ts`)
-
-To run type checking:
-```bash
-npm run typecheck
-# or
-yarn typecheck
-```
-
-## Testing
-
-This project uses Playwright for end-to-end testing. Run tests with:
+Generate new components following atomic design principles:
 
 ```bash
-npm run test
-# or
-yarn test
+# Usage: npm run gen:component <component-type> <component-name>
+npm run gen:component atoms Button
+npm run gen:component molecules FormGroup
+npm run gen:component organisms ProductCard
+npm run gen:component templates AccountLayout
 ```
 
-For interactive test UI:
-```bash
-npm run test:ui
-# or
-yarn test:ui
-```
+## Best Practices
 
-## Folder Structure
+1. **Folder Structure**: Route folders mirror the URL structure
+2. **Component Organization**: Follow atomic design principles
+3. **Data Fetching**: Use React Query for client-side data fetching
+4. **Styling**: Use Tailwind CSS for utility-first styling
+5. **TypeScript**: Type all components and functions
+6. **Testing**: Write tests for components and utilities
 
-```
-src/
-├── assets/       # Static assets like images and icons
-├── components/   # Reusable React components
-├── constants/    # Application constants and configuration
-├── contexts/     # React contexts
-├── hooks/        # Custom React hooks
-├── layout/       # Layout components
-├── middleware/   # API middleware and adapters
-├── pages/        # Page components
-├── scripts/      # Utility scripts
-├── services/     # API services
-├── store/        # Redux store and slices
-├── tests/        # Test files
-├── types/        # TypeScript type definitions
-└── utils/        # Utility functions
-```
+## Contributing
 
-## License
-
-MIT
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `rigin feature/my-feature`
+5. Submit a pull request

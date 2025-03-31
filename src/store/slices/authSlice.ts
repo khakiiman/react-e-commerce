@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { authService } from '../../services/api';
-import { AuthState, LoginPayload, User, RootState } from '../../types/store';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Async thunks
+import { authService } from '../../services/api';
+import { AuthState, LoginPayload, RootState, User } from '../../types/store';
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: LoginPayload, { rejectWithValue }) => {
@@ -14,16 +13,10 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
-
-export const logoutUser = createAsyncThunk(
-  'auth/logout',
-  async () => {
-    await authService.logout();
-    return null;
-  }
-);
-
-// Initial state
+export const logoutUser = createAsyncThunk('auth/logout', async () => {
+  await authService.logout();
+  return null;
+});
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
@@ -31,13 +24,11 @@ const initialState: AuthState = {
   loading: false,
   error: null,
 };
-
-// Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
     setUser: (state, action: PayloadAction<User>) => {
@@ -45,10 +36,9 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      // Login cases
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -62,11 +52,10 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Logout cases
-      .addCase(logoutUser.pending, (state) => {
+      .addCase(logoutUser.pending, state => {
         state.loading = true;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
+      .addCase(logoutUser.fulfilled, state => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
@@ -74,14 +63,10 @@ const authSlice = createSlice({
       });
   },
 });
-
 export const { clearError, setUser } = authSlice.actions;
-
-// Selectors
 export const selectAuth = (state: RootState): AuthState => state.auth;
 export const selectIsAuthenticated = (state: RootState): boolean => state.auth.isAuthenticated;
 export const selectUser = (state: RootState): User | null => state.auth.user;
 export const selectAuthLoading = (state: RootState): boolean => state.auth.loading;
 export const selectAuthError = (state: RootState): string | null => state.auth.error;
-
-export default authSlice.reducer; 
+export default authSlice.reducer;

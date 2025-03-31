@@ -1,68 +1,38 @@
 import React from 'react';
 import { Triangle } from 'react-loader-spinner';
-
-type LoadingSize = 'small' | 'medium' | 'large';
-
-interface SizeConfig {
-  height: string;
-  width: string;
-  containerClass: string;
-}
-
-interface SizeMap {
-  [key: string]: SizeConfig;
-}
+import colorSystem from '@/styles/colorSystem';
 
 interface LoadingStateProps {
-  text?: string;
-  size?: LoadingSize;
-  color?: string;
+  message?: string;
+  size?: 'small' | 'medium' | 'large';
   className?: string;
-  fullHeight?: boolean;
 }
 
-/**
- * Reusable loading component with consistent styling
- */
 const LoadingState: React.FC<LoadingStateProps> = ({
-  text = 'Loading...',
+  message = 'Loading...',
   size = 'medium',
-  color = '#1f2937',
   className = '',
-  fullHeight = false,
 }) => {
-  
-  const sizeMap: SizeMap = {
-    small: { height: '40', width: '40', containerClass: 'min-h-[100px]' },
-    medium: { height: '80', width: '80', containerClass: 'min-h-[200px]' },
-    large: { height: '120', width: '120', containerClass: 'min-h-[300px]' },
+  const sizeMap = {
+    small: { height: '40', width: '40', className: 'min-h-[100px]' },
+    medium: { height: '60', width: '60', className: 'min-h-[200px]' },
+    large: { height: '80', width: '80', className: 'min-h-[300px]' },
   };
 
-  const { height, width, containerClass } = sizeMap[size] || sizeMap.medium;
+  const { height, width, className: sizeClassName } = sizeMap[size];
 
   return (
-    <div 
-      className={`
-        flex flex-col items-center justify-center 
-        ${fullHeight ? 'h-full' : containerClass}
-        ${className}
-      `}
-      data-testid="loading-indicator"
-    >
+    <div className={`flex flex-col items-center justify-center ${sizeClassName} p-4 ${className}`}>
       <Triangle
         visible={true}
         height={height}
         width={width}
-        color={color}
+        color="#334970"
         ariaLabel="loading-indicator"
       />
-      {text && (
-        <p className="mt-4 font-medium text-center text-gray-600 dark:text-gray-400">
-          {text}
-        </p>
-      )}
+      <p className={`mt-4 ${colorSystem.light.text.tertiary} text-center`}>{message}</p>
     </div>
   );
 };
 
-export default LoadingState; 
+export default LoadingState;

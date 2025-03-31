@@ -1,19 +1,22 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-// Use a dynamic import approach to avoid immediate loading of non-TS files
-// We'll replace these with proper TS imports as we convert each slice
-import favoritesReducer from './slices/favoritesSlice';
-import cartReducer from './slices/cartSlice';
 import authReducer from './slices/authSlice';
+import cartReducer from './slices/cartSlice';
+import favoritesReducer from './slices/favoritesSlice';
 import uiReducer from './slices/uiSlice';
-
-const persistConfig: any = {
-  key: 'root',
-  storage,
-  whitelist: ['favorites', 'cart', 'auth'],
-};
 
 const rootReducer = combineReducers({
   favorites: favoritesReducer,
@@ -22,22 +25,35 @@ const rootReducer = combineReducers({
   ui: uiReducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+export type RootState = ReturnType<typeof rootReducer>;
 
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
-    }),
-  devTools: process.env.NODE_ENV !== 'production',
-});
+export type PersistedRootState = RootState;
 
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['favorites', 'cart'],
+};
+
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
+
+export const makeStore = () => {
+  return configureStore({
+    reducer: persistedReducer,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+  });
+};
+
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppDispatch = AppStore['dispatch'];
+
+const store = makeStore();
 export const persistor = persistStore(store);
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type AppDispatch = typeof store.dispatch;
-// Type for useSelector
-export type AppRootState = ReturnType<typeof store.getState>;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<PersistedRootState> = useSelector;

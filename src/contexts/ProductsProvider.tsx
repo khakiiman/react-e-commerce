@@ -1,8 +1,9 @@
-import { createContext, useContext, ReactNode } from "react";
-import { useProducts } from "../hooks/useProductsApi";
-import { Product } from "../types/api";
+'use client';
+import { createContext, ReactNode, useContext } from 'react';
 
-// Create a typed context
+import { useProducts } from '../hooks/useProductsApi';
+import { Product } from '../types/api';
+
 const productsContext = createContext<Product[] | undefined>(undefined);
 
 interface ProductsProviderProps {
@@ -10,17 +11,10 @@ interface ProductsProviderProps {
 }
 
 function ProductsProvider({ children }: ProductsProviderProps) {
-  // Pass a special flag to disable automatic fetching when not needed
   const { data } = useProducts({ disabled: true });
-  
-  // Extract the products array from data if it exists, otherwise use an empty array
   const products = data && 'data' in data ? data.data : [];
-  
-  return (
-    <productsContext.Provider value={products}>
-      {children}
-    </productsContext.Provider>
-  );
+
+  return <productsContext.Provider value={products}>{children}</productsContext.Provider>;
 }
 
 function useProductConsumer(): Product[] | undefined {
@@ -37,4 +31,4 @@ function useGetProduct(id: number): Product | undefined {
 }
 
 export default ProductsProvider;
-export { useProductConsumer, useGetProduct }; 
+export { useGetProduct, useProductConsumer };

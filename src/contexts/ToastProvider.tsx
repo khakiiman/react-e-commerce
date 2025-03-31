@@ -1,5 +1,6 @@
-import { createContext, useContext, ReactNode } from 'react';
-import { Toaster, toast } from 'sonner';
+import { createContext, ReactNode, useContext } from 'react';
+import { toast, Toaster } from 'sonner';
+
 import { Toast } from '../types/store';
 
 interface ToastContextType {
@@ -15,10 +16,13 @@ const ToastContext = createContext<ToastContextType | null>(null);
 
 export function ToastProvider({ children }: ToastProviderProps) {
   const showToast = (messageOrToast: string | Toast, type = 'success', duration = 3000) => {
-    // If messageOrToast is an object (Toast)
     if (typeof messageOrToast === 'object') {
-      const { message, type: toastType = 'success', duration: toastDuration = 3000 } = messageOrToast;
-      switch(toastType) {
+      const {
+        message,
+        type: toastType = 'success',
+        duration: toastDuration = 3000,
+      } = messageOrToast;
+      switch (toastType) {
         case 'success':
           toast.success(message, { duration: toastDuration });
           break;
@@ -36,9 +40,8 @@ export function ToastProvider({ children }: ToastProviderProps) {
       }
       return;
     }
-    
-    // If messageOrToast is a string
-    switch(type) {
+
+    switch (type) {
       case 'success':
         toast.success(messageOrToast, { duration });
         break;
@@ -62,16 +65,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
   return (
     <ToastContext.Provider value={{ showToast, hideToast }}>
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
-          style: {
-            background: 'var(--toast-bg, #fff)',
-            color: 'var(--toast-color, #333)',
-            border: 'var(--toast-border, 1px solid #eee)',
-            fontSize: 'var(--toast-font-size, 14px)',
-            borderRadius: 'var(--toast-radius, 8px)',
-          },
           className: 'custom-toast',
           duration: 3000,
         }}
@@ -89,4 +85,4 @@ export function useToast(): ToastContextType {
     throw new Error('useToast must be used within a ToastProvider');
   }
   return context;
-} 
+}

@@ -1,31 +1,28 @@
-// Common types
 export interface Pagination {
   limit: number;
   offset: number;
   total?: number;
 }
-
 export interface ApiResponse<T> {
   data: T;
   status: number;
   statusText: string;
   headers: Record<string, string>;
 }
-
-// Error types
-export class ApiError extends Error {
+export interface ApiErrorType {
   status: number;
-  data: any;
-
-  constructor(message: string, status: number, data: any = null) {
+  data: Record<string, unknown> | null;
+}
+export class ApiError extends Error implements ApiErrorType {
+  status: number;
+  data: Record<string, unknown> | null;
+  constructor(message: string, status: number, data: Record<string, unknown> | null = null) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
   }
 }
-
-// Product types
 export interface Category {
   id: number;
   name: string;
@@ -33,7 +30,6 @@ export interface Category {
   creationAt: string;
   updatedAt: string;
 }
-
 export interface Product {
   id: number;
   title: string;
@@ -48,12 +44,10 @@ export interface Product {
   discountPercentage?: number;
   stock?: number;
 }
-
 export interface ProductsResponse {
   data: Product[];
   total: number;
 }
-
 export interface ProductsParams {
   limit?: number;
   offset?: number;
@@ -65,16 +59,11 @@ export interface ProductsParams {
   disabled?: boolean;
   min_rating?: number;
 }
-
-// Category types
 export interface CategoriesResponse extends Array<Category> {}
-
-// Auth types
 export interface LoginCredentials {
   email: string;
   password: string;
 }
-
 export interface LoginResponse {
   token: string;
   user: {
@@ -85,8 +74,10 @@ export interface LoginResponse {
     avatar?: string;
   };
 }
-
-// DummyJSON specific types (for middleware adapter)
+export interface DummyJsonCategory {
+  name?: string;
+  slug: string;
+}
 export interface DummyJsonProduct {
   id: number;
   title: string;
@@ -104,10 +95,9 @@ export interface DummyJsonProduct {
     updatedAt?: string;
   };
 }
-
 export interface DummyJsonProductsResponse {
   products: DummyJsonProduct[];
   total: number;
   skip: number;
   limit: number;
-} 
+}
