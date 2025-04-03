@@ -1,5 +1,7 @@
 # Nextjs E-Commerce Shop
 
+![alt text](https://github.com/khakiiman/react-e-commerce/blob/main/src/assets/Intro.png?raw=true)
+
 A full-stack e-commerce application built with Next.js App Router, TypeScript, and Tailwind CSS.
 
 ## Project Structure
