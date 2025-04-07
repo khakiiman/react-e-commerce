@@ -13,11 +13,13 @@ import {
   FaTruck,
 } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 import StarRating from '@/components/atoms/StarRating';
 import { useToast } from '@/contexts/ToastProvider';
 import { useAppSelector } from '@/store';
 import { addToCart, removeFromCart, selectIsInCart } from '@/store/slices/cartSlice';
+import { selectIsFavorite, toggleFavorite } from '@/store/slices/favoritesSlice';
 import { colorSystem } from '@/styles/colorSystem';
 import { Product } from '@/types/api';
 
@@ -34,6 +36,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   const dispatch = useDispatch();
   const { showToast } = useToast();
   const isInCart = useAppSelector(state => selectIsInCart(state, product.id));
+  const isProductFavorite = useAppSelector(state => selectIsFavorite(state, product.id));
 
   useEffect(() => {
     if (product) {
@@ -80,6 +83,18 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         duration: 3000,
       });
     }
+  };
+
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavorite(product.id));
+    showToast({
+      id: `favorite-${product.id}-${Date.now()}`,
+      message: isProductFavorite
+        ? `${title} has been removed from favorites.`
+        : `${title} has been added to favorites.`,
+      type: isProductFavorite ? 'info' : 'success',
+      duration: 3000,
+    });
   };
 
   return (
@@ -311,35 +326,36 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleCartAction}
-              className={`
-                w-full py-3 px-4 text-base font-medium transition-all border border-silver-lake-blue duration-300 rounded-lg
-                flex items-center justify-center gap-2
-                ${
-                  isInCart
-                    ? `${colorSystem.light.button.danger} dark:${colorSystem.dark.button.danger}`
-                    : `${colorSystem.light.button.primary} dark:${colorSystem.dark.button.primary}`
-                }
-                shadow-md hover:shadow-lg
-                transform hover:-translate-y-0.5
-              `}
-              data-testid="cart-button"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap items-center mt-8 space-y-4 md:space-y-0 md:space-x-4"
             >
-              {isInCart ? (
-                <>
-                  <FaTimes size={16} />
-                  Remove from Cart
-                </>
-              ) : (
-                <>
-                  <FaShoppingCart size={16} />
-                  Add to Cart
-                </>
-              )}
-            </motion.button>
+              <button
+                onClick={handleCartAction}
+                className={`flex items-center justify-center px-6 py-3 font-medium text-center text-white transition-all rounded-lg shadow-lg focus:outline-none ${
+                  isInCart ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-900 hover:bg-gray-800'
+                } dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700`}
+                data-testid="add-to-cart-detail-button"
+              >
+                <FaShoppingCart className="mr-2" />
+                {isInCart ? 'Remove from Cart' : 'Add to Cart'}
+              </button>
+
+              <button
+                onClick={handleToggleFavorite}
+                className="flex items-center justify-center p-3 transition-all bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none"
+                aria-label={isProductFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                data-testid="detail-favorite-button"
+              >
+                {isProductFavorite ? (
+                  <AiFillHeart className="text-red-500" size={24} />
+                ) : (
+                  <AiOutlineHeart size={24} />
+                )}
+              </button>
+            </motion.div>
           </motion.div>
         </div>
       </div>

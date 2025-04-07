@@ -1,12 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
+import { useDispatch } from 'react-redux';
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  images?: string[];
-  category: string;
-}
+import { useAppSelector } from '@/store';
+import {
+  selectFavorites,
+  toggleFavorite as toggleFavoriteAction,
+} from '@/store/slices/favoritesSlice';
+import { Product } from '@/types/api';
 
 interface FavoriteItem {
   id: number;
@@ -29,38 +29,18 @@ interface FavoritesProviderProps {
 }
 
 export function FavoritesProvider({ children }: FavoritesProviderProps): JSX.Element {
-  const [favorites, setFavorites] = useState<FavoriteItem[]>(() => {
-    const savedFavorites = localStorage.getItem('favorites');
-    return savedFavorites ? JSON.parse(savedFavorites) : [];
-  });
+  const dispatch = useDispatch();
+  const favoriteIds = useAppSelector(selectFavorites);
 
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
+  // Convert the favorite IDs to favorite items for backward compatibility
+  const favorites: FavoriteItem[] = [];
 
   const toggleFavorite = (product: Product): void => {
-    setFavorites(prevFavorites => {
-      const isProductFavorite = prevFavorites.some(fav => fav.id === product.id);
-
-      if (isProductFavorite) {
-        return prevFavorites.filter(fav => fav.id !== product.id);
-      } else {
-        return [
-          ...prevFavorites,
-          {
-            id: product.id,
-            title: product.title,
-            price: product.price,
-            image: product.images?.[0] || '',
-            category: product.category,
-          },
-        ];
-      }
-    });
+    dispatch(toggleFavoriteAction(product.id));
   };
 
   const isFavorite = (productId: number): boolean => {
-    return favorites.some(fav => fav.id === productId);
+    return favoriteIds.includes(productId);
   };
 
   return (

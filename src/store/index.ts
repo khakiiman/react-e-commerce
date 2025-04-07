@@ -53,6 +53,7 @@ export type AppStore = ReturnType<typeof makeStore>;
 export type AppDispatch = AppStore['dispatch'];
 
 const store = makeStore();
+export { store };
 export const persistor = persistStore(store);
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

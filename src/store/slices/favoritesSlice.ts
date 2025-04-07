@@ -1,9 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { FavoritesState, RootState } from '../../types/store';
+
+interface FavoriteItem {
+  id: number;
+  title?: string;
+  price?: number;
+  image?: string;
+  category?: string;
+}
+
+let initialItems: number[] = [];
+if (typeof window !== 'undefined') {
+  try {
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      const parsedFavorites = JSON.parse(savedFavorites);
+      initialItems = parsedFavorites.map((fav: FavoriteItem) => fav.id);
+    }
+  } catch (error) {
+    console.error('Error loading favorites from localStorage:', error);
+  }
+}
+
 const initialState: FavoritesState = {
-  items: [],
+  items: initialItems,
 };
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,

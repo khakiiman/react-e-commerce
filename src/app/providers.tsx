@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ToastProvider } from '@/contexts/ToastProvider';
-import { makeStore, persistor } from '@/store';
+import { persistor, store } from '@/store';
 
 const logQueryError = (error: unknown) => {
   console.error('Query error:', error);
@@ -48,7 +48,7 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <ThemeProvider>
-          <Provider store={makeStore()}>
+          <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               {children}
             </PersistGate>
